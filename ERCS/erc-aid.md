@@ -37,7 +37,7 @@ Discovery layers (agentic resource discovery catalogues, DNS-based agent records
 
 ## Specification
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 and RFC 8174.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt) and [RFC 8174](https://www.ietf.org/rfc/rfc8174.txt).
 
 ### Overview
 
@@ -52,7 +52,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 An AID is the tuple `(namespace, chainId, address)`.
 
-- The canonical string form is CAIP-10: `eip155:{chainId}:{address}`, with `address` in EIP-55 checksum form.
+- The canonical string form is CAIP-10: `eip155:{chainId}:{address}`, with `address` in [ERC-55](./eip-55.md) checksum form.
 - The `anchor` is the `address` component. Any externally owned account or contract account is a valid anchor.
 - An AID is chain-scoped. The same address on another chain is a distinct AID. AID Documents MAY link them via `alsoKnownAs`.
 - The DID form `did:aid:eip155:{chainId}:{address}` and DID URL paths for owned resources (e.g. `/skill/7`) are defined by a companion DID method specification. They are not modelled on chain.
@@ -85,12 +85,12 @@ An AID binds to at most one `(identityRegistry, agentId)`, and each `(identityRe
 
 Preconditions of `bind` and `bindWithSig`:
 
-- the caller is the anchor, or the call carries a valid EIP-712 signature of the anchor over the `Bind` struct below (EIP-1271 for contract anchors);
+- the caller is the anchor, or the call carries a valid [EIP-712](./eip-712.md) signature of the anchor over the `Bind` struct below ([ERC-1271](./eip-1271.md) for contract anchors);
 - the anchor is not retired;
 - the anchor has no binding and the target agent is not bound;
 - the registry address has code, `ownerOf(agentId)` does not revert, and `ownerOf(agentId) == anchor` or `getAgentWallet(agentId) == anchor`.
 
-It is RECOMMENDED that the anchor be the agent's `agentWallet` — the address the agent transacts from — rather than the owner address. An owner controlling several agents SHOULD give each agent its own anchor (its `agentWallet`, or an ERC-6551 token-bound account of the agent token). A binding is not a transfer of the ERC-8004 token and does not change who may administer the registration.
+It is RECOMMENDED that the anchor be the agent's `agentWallet` — the address the agent transacts from — rather than the owner address. An owner controlling several agents SHOULD give each agent its own anchor (its `agentWallet`, or an [ERC-6551](./eip-6551.md) token-bound account of the agent token). A binding is not a transfer of the ERC-8004 token and does not change who may administer the registration.
 
 Reverse pointers are RECOMMENDED: the registration file SHOULD carry `{"type": "DID", "value": "did:aid:eip155:{chainId}:{anchor}"}` in `services[]`, and the owner SHOULD call `setMetadata(agentId, "aid", abi.encodePacked(anchor))`.
 
@@ -98,7 +98,7 @@ Reverse pointers are RECOMMENDED: the registration file SHOULD carry `{"type": "
 
 ### 4. Registry interface
 
-Implementations MUST expose the following interface and MUST support ERC-165 for `type(IAIDRegistry).interfaceId` (`0x72750a54`).
+Implementations MUST expose the following interface and MUST support [ERC-165](./eip-165.md) for `type(IAIDRegistry).interfaceId` (`0x72750a54`).
 
 ```solidity
 // SPDX-License-Identifier: CC0-1.0
@@ -178,12 +178,12 @@ interface IAIDRegistry {
 - `setFacet` MUST revert when `validUntil == 0` or `validUntil <= validFrom`, and when `access` is not a member of `Access`.
 - `facetType` is `keccak256(bytes(facetTypeURI))` (see §6).
 - `bindWithSig` MUST use EIP-712 with domain `{name: "AIDRegistry", version: "1", chainId, verifyingContract}` and the struct
-  `Bind(address anchor,address registry,uint256 agentId,uint256 nonce,uint256 deadline)`, where `nonce` is `nonces(anchor)` at call time and is consumed by a successful call. Signatures with `s` in the upper half of the curve order MUST be rejected. Contract anchors are verified with EIP-1271.
+  `Bind(address anchor,address registry,uint256 agentId,uint256 nonce,uint256 deadline)`, where `nonce` is `nonces(anchor)` at call time and is consumed by a successful call. Signatures with `s` in the upper half of the curve order MUST be rejected. Contract anchors are verified with ERC-1271.
 - The registry MUST be deployed once per chain. Deterministic deployment (same address on every chain) is RECOMMENDED so that a resolver can locate it from `chainId` alone.
 
 ### 5. AID Document
 
-The AID Document is an off-chain JSON object referenced by `documentURI(anchor)`. Its `digest` MUST equal `keccak256` of the document serialised with the JSON Canonicalization Scheme (RFC 8785). A resolver MUST discard a document whose digest does not match, and MUST discard a document whose `aid` is not the anchor being resolved.
+The AID Document is an off-chain JSON object referenced by `documentURI(anchor)`. Its `digest` MUST equal `keccak256` of the document serialised with the JSON Canonicalization Scheme ([RFC 8785](https://www.rfc-editor.org/rfc/rfc8785)). A resolver MUST discard a document whose digest does not match, and MUST discard a document whose `aid` is not the anchor being resolved.
 
 ```json
 {
@@ -319,11 +319,11 @@ No change to ERC-8004, ERC-8419, ERC-8338 or ERC-8414 contracts is required. Exi
 
 ## Test Cases
 
-Test vectors (facet-type keys, the JCS digest of a sample AID Document, the EIP-712 `Bind` digest, the ERC-8419 `account` subject key for an anchor, and the `IAIDRegistry` interface id) are provided in `../assets/erc-9999/vectors/aid-vectors.json`. The behavioural test suite covers: default `DORMANT`; both binding preconditions; both directions of uniqueness; `ACTIVE`→`STALE`→`ACTIVE` through the liveness window and per-anchor windows; `STALE` on wallet drift and on token burn without any AID transaction; facet validation and list maintenance; `bindWithSig` for EOA and EIP-1271 anchors including replay, wrong-signer and expiry rejection; retirement releasing the binding, blocking every write, and permitting a successor to bind; and the reference resolver classifying facets and applying the digest and post-retirement rules.
+Test vectors (facet-type keys, the JCS digest of a sample AID Document, the EIP-712 `Bind` digest, the ERC-8419 `account` subject key for an anchor, and the `IAIDRegistry` interface id) are provided in [`aid-vectors.json`](../assets/erc-9999/vectors/aid-vectors.json), with a sample AID Document in [`aid-document.sample.json`](../assets/erc-9999/vectors/aid-document.sample.json). The behavioural test suite covers: default `DORMANT`; both binding preconditions; both directions of uniqueness; `ACTIVE`→`STALE`→`ACTIVE` through the liveness window and per-anchor windows; `STALE` on wallet drift and on token burn without any AID transaction; facet validation and list maintenance; `bindWithSig` for EOA and ERC-1271 anchors including replay, wrong-signer and expiry rejection; retirement releasing the binding, blocking every write, and permitting a successor to bind; and the reference resolver classifying facets and applying the digest and post-retirement rules.
 
 ## Reference Implementation
 
-`../assets/erc-9999/contracts/AIDRegistry.sol` implements `IAIDRegistry` without external dependencies (self-contained EIP-712, ECDSA with low-`s` enforcement and EIP-1271). `../assets/erc-9999/tools/aid-resolve/` implements §10 in JavaScript, usable against an RPC endpoint or an offline fixture. `../assets/erc-9999/schemas/` holds the JSON Schemas for the AID Document, the facet envelope and the core facet content documents.
+[`AIDRegistry.sol`](../assets/erc-9999/contracts/AIDRegistry.sol) implements [`IAIDRegistry`](../assets/erc-9999/contracts/interfaces/IAIDRegistry.sol) without external dependencies (self-contained EIP-712, ECDSA with low-`s` enforcement and ERC-1271). [`resolve.js`](../assets/erc-9999/tools/aid-resolve/resolve.js) implements §10 in JavaScript, usable against an RPC endpoint or an offline fixture. The JSON Schemas for the AID Document ([`aid-document.schema.json`](../assets/erc-9999/schemas/aid-document.schema.json)), the facet envelope ([`facet.schema.json`](../assets/erc-9999/schemas/facet.schema.json)) and the core facet content documents ([`facets/`](../assets/erc-9999/schemas/facets/finance-observed-v1.schema.json) and siblings) are provided alongside.
 
 ## Security Considerations
 

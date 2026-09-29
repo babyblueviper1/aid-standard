@@ -9,8 +9,10 @@ Status: **round 2 — full draft text, reference implementation, schemas, vector
 ## Layout
 
 ```
-ERCS/erc-aid.md                       EIP-1 formatted draft (placeholder number 9999)
+ERCS/erc-aid.md                       EIP-1 formatted draft (placeholder number 9999; becomes ERCS/erc-NNNN.md in the ERCs PR)
 docs/AID-design-memo-zh.md            中文设计备忘录 v0.2（决策记录 + R2 交付说明）
+ercs-pr-package/                      ready-to-upload file set for the ethereum/ERCs PR (erc-9999 paths) + PR description + checklist
+LICENSE.md                            CC0-1.0
 assets/erc-aid/
   contracts/AIDRegistry.sol           reference registry (no owner, no upgrade, self-contained EIP-712/1271)
   contracts/interfaces/               IAIDRegistry.sol, IERC8004Identity.sol
