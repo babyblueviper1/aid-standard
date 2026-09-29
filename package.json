@@ -1,0 +1,26 @@
+{
+  "name": "aid-standard",
+  "version": "0.2.0",
+  "description": "Agent Identity (AID) \u2014 draft ERC, reference implementation, schemas, vectors, resolver",
+  "scripts": {
+    "compile": "node scripts/compile.js",
+    "test": "node scripts/compile.js && npx hardhat run test/run.js",
+    "vectors": "node scripts/vectors.js && node scripts/fixtures.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "CC0-1.0",
+  "dependencies": {
+    "@ethereumjs/common": "^10.1.3",
+    "@ethereumjs/evm": "^10.1.3",
+    "@ethereumjs/util": "^10.1.3",
+    "@ethereumjs/vm": "^8.1.1",
+    "@nomicfoundation/hardhat-ethers": "^3.1.3",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "ethers": "^6.17.0",
+    "hardhat": "2.22",
+    "solc": "^0.8.28"
+  },
+  "private": true
+}
