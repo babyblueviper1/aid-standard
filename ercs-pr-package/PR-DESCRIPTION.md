@@ -26,7 +26,7 @@ Source repository with the behavioural test suite (22 cases): https://github.com
 
 ## Discussion
 
-Ethereum Magicians: (to be added after the thread is posted)
+Ethereum Magicians: https://ethereum-magicians.org/t/draft-erc-agent-identity-aid-address-anchored-identity-for-live-agents-over-erc-8004-assertion-registries/29805
 
 ## Notes for editors
 

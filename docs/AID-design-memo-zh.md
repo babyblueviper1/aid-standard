@@ -159,7 +159,7 @@ resolver     去哪复核：erc8004-identity | erc8004-reputation | erc8419-asse
 | R1 | 本备忘录 + `ERCS/erc-aid.md` 骨架 + 仓库 README | 已确认 |
 | R2 | ERC 全文；`AIDRegistry.sol` 参考实现 + 22 项行为测试；`aid-document` / facet / 五个核心 facet content schema；vectors；`tools/aid-resolve` 参考解析器 | **已交付（2026-09-30）** |
 | R3 | Sepolia 部署（沿用 KYA 方式：沙箱签名、桌面内置浏览器广播）；worked examples 绑定 8004 官方 IdentityRegistry 上的示例 agent 与 8419 Sepolia 部署；Magicians 帖 | R2 后 |
-| R4 | ERCs PR（分支 `add-erc-aid`，占位 9999，自包含提交版）；`did:aid` method 规范 companion 提交 W3C did-extensions | 文件包已备好，可随时开 PR；前置只剩 Magicians 帖（`discussions-to` 不能是占位符） |
+| R4 | ERCs PR（分支 `add-erc-aid`，占位 9999，自包含提交版）；`did:aid` method 规范 companion 提交 W3C did-extensions | Magicians 帖已发（topic 29805，2026-09-30），`discussions-to` 已填；文件包可直接上传开 PR |
 
 ---
 

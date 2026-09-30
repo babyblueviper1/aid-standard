@@ -11,6 +11,7 @@ Status: **round 2 complete — full draft text, reference implementation, schema
 ```
 ERCS/erc-aid.md                       EIP-1 formatted draft (placeholder number 9999; becomes ERCS/erc-NNNN.md in the ERCs PR)
 docs/AID-design-memo-zh.md            中文设计备忘录 v0.2（决策记录 + R2 交付说明）
+docs/magicians-post.md                Ethereum Magicians thread text (post first, then fill discussions-to)
 ercs-pr-package/                      ready-to-upload file set for the ethereum/ERCs PR (erc-9999 paths, self-contained filing variant) + PR description + checklist
 scripts/make-filing-variant.py        regenerates ercs-pr-package/ERCS/erc-9999.md from ERCS/erc-aid.md
 LICENSE.md                            CC0-1.0
