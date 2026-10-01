@@ -157,7 +157,7 @@ resolver     去哪复核：erc8004-identity | erc8004-reputation | erc8419-asse
 | 轮次 | 交付 | 状态 |
 |---|---|---|
 | R1 | 本备忘录 + `ERCS/erc-aid.md` 骨架 + 仓库 README | 已确认 |
-| R2 | ERC 全文；`AIDRegistry.sol` 参考实现 + 22 项行为测试；`aid-document` / facet / 五个核心 facet content schema；vectors；`tools/aid-resolve` 参考解析器 | **已交付（2026-09-30）** |
+| R2 | ERC 全文；`AIDRegistry.sol` 参考实现 + 行为测试（R2.4 后 28 项）；`aid-document` / facet / 五个核心 facet content schema；vectors；`tools/aid-resolve` 参考解析器 | **已交付（2026-09-30）** |
 | R3 | Sepolia 部署（沿用 KYA 方式：沙箱签名、桌面内置浏览器广播）；worked examples 绑定 8004 官方 IdentityRegistry 上的示例 agent 与 8419 Sepolia 部署；Magicians 帖 | R2 后 |
 | R4 | ERCs PR（分支 `add-erc-aid`，ERC-8434 已分号，自包含提交版）；`did:aid` method 规范 companion 提交 W3C did-extensions | Magicians 帖已发（topic 29805，2026-09-30），`discussions-to` 已填；文件包可直接上传开 PR |
 
@@ -178,3 +178,23 @@ resolver     去哪复核：erc8004-identity | erc8004-reputation | erc8419-asse
 **解析器** `tools/aid-resolve/resolve.js`：RPC 模式或 fixture 模式，输出 on-chain state / resolved state / 降级原因 / 文档校验 / facet 三分类；`vectors/fixtures/` 里有 active、active=false、retired 三个 fixture。
 
 **R3 起点**：Sepolia 部署 AIDRegistry（默认窗 90 天、上限 365 天），用 8419 那次的 demo agent 10387 做 worked example：把 agentWallet 设到新锚点、bind、setDocumentURI、setFacet(finance, ZK)、对该 subject 发一条 8419 `account` 断言、再跑解析器出完整报告。需要你给一个 Sepolia 地址接收合约控制权（这次注册表本身无 owner，只有 8004 demo agent 的 owner 与 8419 scheme controller 仍在上次的临时 key 上）。
+
+---
+
+## 7. R2.4 — 第一轮评审采纳（2026-10-01）
+
+回帖见 `docs/magicians-replies-2026-10-01.md`。两条建议全部采纳并实现：
+
+**chugarchugarr → 授权区间 + 接管规则**
+- 规范 §3 新增 *Takeover* 与 *Authority intervals* 两段；§4 规则增加 bind 接管；§10（提交版 §11）解析算法扩成十步，加入区间重建与归属判定；§11（提交版 §12）写明 8004 的 `Transfer` + `MetadataSet(agentWallet)` 事件足以重建区间（转移会清空钱包，边界一定有事件）；Rationale、Security 各加两段。
+- 合约 `AIDRegistry._bind`：目标 agent 已被别的 anchor 绑定时，先检查旧 anchor 的谓词；仍成立（owner 与 wallet 是两个地址时都算）→ `AgentAlreadyBound`；已失效 → 删旧绑定、发 `Unbound(old)`、绑定新 anchor。接口、interfaceId 不变。
+- 解析器 `reconstructIntervals()`：从 AID 的 `Bound/Unbound` 与 8004 的 `Transfer/MetadataSet` 事件重建区间；agentId 归属的 facet（identity/reputation/validation）落在区间外 → `unattributable`；地址归属的 facet 保留并标 `attribution: outside-interval`。
+- 新测试 4 项（接管成功 / owner-vs-wallet 拒绝接管 / A→gap→A 开新区间 / 接管仍需资格）+ 解析器区间端到端 1 项。
+
+**babyblueviper1 → `committedAt` / `subjectWindow`**
+- 信封 schema 新增 `subjectWindow {from, until}` 与 `committedAt {anchor: block|rfc3161|ots, proof, log?}`，与 provenance 正交。
+- 规范 §7（提交版 §8）新增"Timing is orthogonal to provenance"：`timing ∈ {pre-outcome, integrity-only, none}` 判定表；"存在≠唯一"写入正文与 Security（建议公开只追加承诺日志，resolver 可据此降级）。§8 补 `validUntil` 与 `subjectWindow` 的区别。
+- 解析器 `verifyCommitment()`：`block` 类在 RPC 模式下真实验证（digest 必须出现在该交易 calldata 或日志中，取区块时间）；`rfc3161`/`ots` 留插槽（`ctx.verifiers`）；fixture 模式用 `trustedTimestamps` 代替外部验证器。
+- 测试：同一笔链上 `setFacet` 交易作为锚，`subjectWindow.until` 在其后 → pre-outcome，在其前 → integrity-only，假 txHash → integrity-only，无承诺 → none。fixtures 新增 `interval-gap.json`、`timing.json`。
+
+**决策记录**：按地址归属的断开期证据选"保留并标记"；接管规则采纳；8004 钱包事件已核实；提交节奏为改名之后的独立内容提交。

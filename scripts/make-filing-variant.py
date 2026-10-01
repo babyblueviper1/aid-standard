@@ -12,6 +12,8 @@ import re, sys, pathlib
 root = pathlib.Path(__file__).resolve().parent.parent
 src = (root / "ERCS" / "erc-aid.md").read_text()
 s = src
+# shift source §N cross-references (N>=5) by one: the filing variant inserts "§5 Assertion registries"
+s = re.sub(r"§(\d+)", lambda m: f"§{int(m.group(1))+1}" if int(m.group(1)) >= 5 else m.group(0), s)
 
 def rep(old, new, count=1):
     global s
@@ -39,7 +41,6 @@ rep("| Assertions | ERC-8419 | issuers, provers | credit scores, KYA levels, aud
 # ---- new §5 Assertion registries; renumber 5..11 -> 6..12 --------------------
 for n in range(11, 4, -1):
     s = s.replace(f"### {n}. ", f"### {n+1}. ")
-s = s.replace("(see §6)", "(see §7)").replace("§10 in JavaScript", "§11 in JavaScript")
 
 assertion_section = '''### 5. Assertion registries
 

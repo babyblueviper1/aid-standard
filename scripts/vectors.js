@@ -69,6 +69,8 @@ const doc = {
     {
       facetType: "aid:tasks/erc8414/v1", provenance: "OBSERVED", issuer: caip,
       validUntil: 1792592000, observedAt: 1790000000,
+      subjectWindow: { from: 1787400000, until: 1790000000 },
+      committedAt: { anchor: "block", proof: { chainId, txHash: "0x" + "ab".repeat(32) }, log: "https://example.invalid/commitments" },
       digest: ethers.keccak256(ethers.toUtf8Bytes("tasks-record-placeholder")),
       access: { mode: "PUBLIC" }, uri: "ipfs://bafy.../tasks.json",
       resolver: { kind: "erc8414", chainId, contracts: ["0xA62059A498E40C4Ae4aF926E2B00C1Ff122bDdb7"], roles: ["creator", "funder", "bidder", "fulfiller", "judge"] },

@@ -174,6 +174,42 @@ async function main() {
     console.log("       IAIDRegistry interfaceId =", sel);
   });
 
+  console.log("\n# stale-binding takeover (authority intervals)");
+  const signers = await ethers.getSigners();
+  const X = signers[6], Y = signers[7], Z = signers[8];
+  await (await I(owner).register()).wait(); // id 5
+  await (await I(owner).setAgentWallet(5, X.address)).wait();
+  await (await R(X).bind(idr, 5)).wait();
+  await t("new wallet holder takes over a binding whose predicate failed; old anchor unbound", async () => {
+    await (await I(owner).setAgentWallet(5, Y.address)).wait();
+    eq(await Reg.state(X.address), S.STALE);
+    const tx = await R(Y).bind(idr, 5); const rc = await tx.wait();
+    const names = rc.logs.map((l) => { try { return Reg.interface.parseLog(l).name; } catch { return null; } }).filter(Boolean);
+    if (!(names.includes("Unbound") && names.includes("Bound"))) throw new Error("expected Unbound(old)+Bound(new), got " + names);
+    eq(await Reg.state(Y.address), S.ACTIVE); eq(await Reg.anchorOf(idr, 5), Y.address);
+    eq(await Reg.state(X.address), S.DORMANT); eq((await Reg.bindingOf(X.address)).registry, ethers.ZeroAddress);
+  });
+  await t("takeover refused while the old anchor still satisfies the predicate (owner vs wallet)", async () => {
+    await (await I(owner).register()).wait(); // id 6, no wallet -> owner qualifies
+    await (await R(owner).unbind()).wait(); // owner was bound to (burned) agent 2 earlier; free it
+    await (await R(owner).bind(idr, 6)).wait(); eq(await Reg.state(owner.address), S.ACTIVE);
+    await (await I(owner).setAgentWallet(6, Z.address)).wait(); // Z qualifies too, but owner still does
+    await reverts(R(Z).bind(idr, 6), "AgentAlreadyBound");
+    eq(await Reg.anchorOf(idr, 6), owner.address);
+  });
+  await t("A -> gap -> A: returning anchor re-binds (new interval), does not inherit the gap", async () => {
+    await (await I(owner).setAgentWallet(5, X.address)).wait(); // relation returns to X; Y is now stale
+    eq(await Reg.state(Y.address), S.STALE);
+    const before = (await Reg.bindingOf(Y.address)).boundAt;
+    await warp(5);
+    await (await R(X).bind(idr, 5)).wait();
+    const b = await Reg.bindingOf(X.address);
+    eq(await Reg.state(X.address), S.ACTIVE); eq(await Reg.state(Y.address), S.DORMANT);
+    if (!(b.boundAt > before)) throw new Error("boundAt must mark the new interval");
+  });
+  await t("takeover still requires the new anchor to qualify", async () =>
+    reverts(R(stranger).bind(idr, 5), "NotAgentOfAnchor"));
+
   console.log("\n# end-to-end: reference resolver over the live registry");
   await t("resolver: ACTIVE anchor with data: document, digest verified, facets classified", async () => {
     const { snapshotFromChain, resolveSnapshot } = require("../tools/aid-resolve/resolve");
@@ -187,15 +223,52 @@ async function main() {
     const uri = "data:application/json;base64," + Buffer.from(jcs).toString("base64");
     await (await R(agentB).setDocumentURI(uri, digest)).wait();
     const snap = await snapshotFromChain(ethers.provider, reg, agentB.address, null);
-    const r = resolveSnapshot(snap, n + 5);
+    const r = await resolveSnapshot(snap, n + 5, { provider: ethers.provider });
     eq(r.onChainState, "ACTIVE"); eq(r.resolvedState, "ACTIVE"); eq(r.document !== null, true);
     eq(r.facets.current.length, 1); eq(r.facets.history.length, 1); eq(r.reasons.length, 0);
   });
   await t("resolver: RETIRED anchor reports successor rule", async () => {
     const { snapshotFromChain, resolveSnapshot } = require("../tools/aid-resolve/resolve");
     const snap = await snapshotFromChain(ethers.provider, reg, agentA.address, null);
-    const r = resolveSnapshot(snap, await now());
+    const r = await resolveSnapshot(snap, await now());
     eq(r.onChainState, "RETIRED"); eq(snap.successor, agentB.address);
+  });
+
+  console.log("\n# authority intervals & timing (resolver)");
+  await t("intervals reconstructed from Bound/Unbound + Transfer/MetadataSet(agentWallet); gap evidence unattributable", async () => {
+    const { reconstructIntervals, resolveSnapshot } = require("../tools/aid-resolve/resolve");
+    const regEv = new ethers.Contract(reg, ["event Bound(address indexed anchor, address indexed registry, uint256 indexed agentId)", "event Unbound(address indexed anchor, address indexed registry, uint256 indexed agentId)"], ethers.provider);
+    const iv = await reconstructIntervals(ethers.provider, regEv, X.address, 0);
+    // X: bound -> wallet moved to Y (gap) -> Y took over -> wallet back -> X re-bound  => two intervals
+    eq(iv.length, 2, "two intervals"); if (!(iv[0].until != null && iv[1].until == null && iv[0].until <= iv[1].from)) throw new Error("bad interval shape " + JSON.stringify(iv));
+    const gapTs = iv[0].until, inTs = iv[1].from;
+    const mk = (obs) => ({ facetType: "aid:review/erc8004/v1", provenance: "ATTESTED", issuer: `eip155:31337:${X.address}`, validUntil: inTs + 10 ** 6, observedAt: obs, digest: ethers.ZeroHash, access: { mode: "PUBLIC" }, resolver: { kind: "erc8004-reputation", registry: idr, agentId: 5 } });
+    const addr = { facetType: "aid:skills/erc8338/v1", provenance: "OBSERVED", issuer: `eip155:31337:${X.address}`, validUntil: inTs + 10 ** 6, observedAt: gapTs, digest: ethers.ZeroHash, access: { mode: "PUBLIC" }, resolver: { kind: "erc8338" } };
+    const snap = { aid: `eip155:31337:${X.address}`, state: 1, authorityIntervals: iv, document: { version: "aid-document/v1", aid: `eip155:31337:${X.address}`, facets: [mk(gapTs), mk(inTs), addr] } };
+    snap.documentDigest = ethers.keccak256(ethers.toUtf8Bytes(require("../tools/jcs").canonicalize(snap.document)));
+    const r = await resolveSnapshot(snap, inTs + 1);
+    eq(r.facets.unattributable.length, 1, "gap review facet unattributable");
+    eq(r.facets.current.length, 2, "in-interval review + address-keyed skills");
+    const sk = r.facets.current.find((f) => f.facetType.startsWith("aid:skills")); eq(sk.attribution, "outside-interval");
+  });
+  await t("timing: block-anchored commitment before subjectWindow.until -> pre-outcome; after -> integrity-only", async () => {
+    const { resolveSnapshot } = require("../tools/aid-resolve/resolve");
+    const n0 = await now();
+    const digest = ethers.keccak256(ethers.toUtf8Bytes("verdict:task-7:accepted"));
+    const FTv = ethers.keccak256(ethers.toUtf8Bytes("aid:tasks/erc8414/v1"));
+    const tx = await R(X).setFacet(FTv, digest, n0, n0 + 10 ** 6, 0, "ipfs://verdict"); const rc = await tx.wait();
+    const at = (await ethers.provider.getBlock(rc.blockNumber)).timestamp;
+    const base = { facetType: "aid:tasks/erc8414/v1", provenance: "ATTESTED", issuer: `eip155:31337:${X.address}`, validUntil: at + 10 ** 6, observedAt: at, digest, access: { mode: "PUBLIC" }, resolver: { kind: "erc8414" }, committedAt: { anchor: "block", proof: { chainId: 31337, txHash: rc.hash } } };
+    const pre = { ...base, subjectWindow: { from: at - 100, until: at + 1000 } };
+    const post = { ...base, facetType: "aid:tasks/erc8414/v1", subjectWindow: { from: at - 1000, until: at - 1 } };
+    const bad = { ...base, committedAt: { anchor: "block", proof: { chainId: 31337, txHash: "0x" + "11".repeat(32) } }, subjectWindow: { from: at - 100, until: at + 1000 } };
+    const none = { ...base }; delete none.committedAt;
+    const doc = { version: "aid-document/v1", aid: `eip155:31337:${X.address}`, facets: [pre, post, bad, none] };
+    const snap = { aid: doc.aid, state: 1, document: doc, documentDigest: ethers.keccak256(ethers.toUtf8Bytes(require("../tools/jcs").canonicalize(doc))) };
+    const r = await resolveSnapshot(snap, at + 1, { provider: ethers.provider });
+    const t4 = r.facets.current.map((f) => f.timing);
+    eq(JSON.stringify(t4), JSON.stringify(["pre-outcome", "integrity-only", "integrity-only", "none"]));
+    eq(r.facets.current[0].committedAtVerified, at);
   });
 
   console.log(`\n${passed} passed, ${failed} failed`);

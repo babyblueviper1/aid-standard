@@ -56,3 +56,8 @@ Commit message: `Add ERC: Agent Identity (AID)`.
 - [ ] Verify on the branch: `ERCS/erc-8434.md` exists, `ERCS/erc-9999.md` and `assets/erc-9999/` are gone, CI green.
 - [ ] Rename the Magicians thread to `ERC-NNNN: Agent Identity (AID)`.
 - [ ] Update `aid-standard` README and memo with the number.
+
+## 5. Content revision R2.4 (after the first review round)
+
+- [ ] On branch `add-erc-aid`: replace `ERCS/erc-8434.md`; replace `assets/erc-8434/contracts/AIDRegistry.sol`, `assets/erc-8434/contracts/mocks/MockIdentityRegistry8004.sol`, `assets/erc-8434/schemas/facet.schema.json`, `assets/erc-8434/tools/aid-resolve/resolve.js`, `assets/erc-8434/vectors/aid-vectors.json`, `assets/erc-8434/vectors/aid-document.sample.json`, all four files under `assets/erc-8434/vectors/fixtures/`; add `assets/erc-8434/vectors/fixtures/interval-gap.json` and `timing.json`. One commit: `ERC-8434: authority intervals, stale-binding takeover, committedAt/subjectWindow (review round 1)`.
+- [ ] Leave a PR comment summarising the changes and linking the two Magicians replies.
