@@ -198,3 +198,11 @@ resolver     去哪复核：erc8004-identity | erc8004-reputation | erc8419-asse
 - 测试：同一笔链上 `setFacet` 交易作为锚，`subjectWindow.until` 在其后 → pre-outcome，在其前 → integrity-only，假 txHash → integrity-only，无承诺 → none。fixtures 新增 `interval-gap.json`、`timing.json`。
 
 **决策记录**：按地址归属的断开期证据选"保留并标记"；接管规则采纳；8004 钱包事件已核实；提交节奏为改名之后的独立内容提交。
+
+---
+
+## 8. R2.5 — 评审第二轮：发行方承诺日志（2026-10-02）
+
+回帖见 `docs/magicians-replies-2026-10-02.md`（#7 babyblueviper1）。采纳"发行方哈希链 + 见证方 + 定期锚定"作为 §7（提交版 §8）的 informative 参考方案，并补三处修正：日志由**发行方**声明（AID Document 新增顶层 `commitmentLog`，或 scheme 描述），且声明必须早于 `subjectWindow.until`；条目带索引标签 `H(subject ‖ facetType ‖ subjectWindow)`，可枚举不泄露；证明时间 = 第一个包含该条目且已锚定的链头的锚定时间，见证方集合随日志声明。`committedAt.log` 改为 `{uri, position}`。Security 新增"接管与继任均不合并历史"（对应 #6 的承诺）。
+
+解析器新增 `exclusivityOf()`：能读到发行方声明日志时，`pre-outcome` 需恰好一条匹配条目（`unique`）；`duplicate` / `missing` / `undeclared` 降为 `integrity-only`；读不到报 `unchecked` 不降级。fixture `log-exclusivity.json` 覆盖三种结果，测试 29 项全绿。OTS 验证器（babyblueviper1 将提 PR）只作为 aid-standard 的可选插件，不进 ERC assets；审查清单在简报第五部分。

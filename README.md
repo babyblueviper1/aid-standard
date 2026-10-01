@@ -4,7 +4,7 @@
 
 > Any address is a dormant AID. It becomes active when a live agent demonstrably operates behind it.
 
-Status: **ERC-8434 filed (PR #2044, CI green). R2.4 — first review round incorporated:** authority intervals + stale-binding takeover (chugarchugarr), `subjectWindow` / `committedAt` timing (babyblueviper1). Not yet deployed to Sepolia (round 3).
+Status: **ERC-8434 filed (PR #2044). R2.5 — two review rounds incorporated:** authority intervals + stale-binding takeover (chugarchugarr), `subjectWindow` / `committedAt` timing and issuer-declared commitment-log profile (babyblueviper1). Not yet deployed to Sepolia (round 3).
 
 ## Layout
 
@@ -27,7 +27,7 @@ tools/jcs.js                          RFC 8785 canonicalisation used for documen
 tools/aid-resolve/resolve.js          reference resolver (RPC or fixture mode)
 scripts/compile.js                    solc-js compile → build/*.json
 scripts/vectors.js · fixtures.js      regenerate vectors and fixtures
-test/run.js                           behavioural tests on a local Hardhat chain (28 cases)
+test/run.js                           behavioural tests on a local Hardhat chain (29 cases)
 docs/magicians-replies-*.md           posted replies + decisions per review round
 ```
 
@@ -53,7 +53,7 @@ node tools/aid-resolve/resolve.js --fixture assets/erc-aid/vectors/fixtures/acti
 - **Binding** to ERC-8004 is strictly one-to-one (anchor ↔ `(identityRegistry, agentId)`), anchor-authorised (direct or EIP-712 `bindWithSig`, EIP-1271 for smart accounts), requiring `agentWallet == anchor` or `ownerOf == anchor`. Recommended anchor: the agent wallet.
 - **States**: `DORMANT → ACTIVE ⇄ STALE`, `→ RETIRED` (irreversible, releases the binding, optional successor). On-chain `state()` is fully deterministic; resolvers downgrade with the 8004 registration file's `active` flag.
 - **Authority intervals**: a binding confers authority only while its predicate holds; re-establishing it opens a new interval and never authorizes the gap. `agentId`-keyed evidence observed in a gap is not attributable; intervals are reconstructed from `Bound`/`Unbound` + ERC-8004 `Transfer` / `MetadataSet(agentWallet)`. A binding whose predicate has failed can be taken over by the agent's current owner/wallet.
-- **Timing** (orthogonal to provenance): optional `subjectWindow` + `committedAt {anchor: block|rfc3161|ots, proof}`; resolver reports `pre-outcome` only when the commitment verifies earlier than `subjectWindow.until`, else `integrity-only`.
+- **Timing** (orthogonal to provenance): optional `subjectWindow` + `committedAt {anchor: block|rfc3161|ots, proof, log?}`; resolver reports `pre-outcome` only when the commitment verifies earlier than `subjectWindow.until`, else `integrity-only`. Informative reference profile: issuer-declared append-only commitment log (`commitmentLog` in the issuer's AID Document) with witnessed, periodically anchored heads; resolver checks exactly-one-entry per `(subject, facetType, subjectWindow)` when it can read the log.
 - **Thin layer**: the registry stores only anchor-authorised records (binding, heartbeat, liveness window, document URI, self facets, retirement). Credit, KYA, audits and profiler outputs are ERC-8419 assertions with subject type `account`; raw feedback is ERC-8004 Reputation; skill/task history is derived from ERC-8338/8414 events.
 - **Facets** carry provenance (`SELF | OBSERVED | ATTESTED | PROVED`), a mandatory `validUntil`, a digest/commitment and an access mode (`PUBLIC | GATED | ZK`). Financial-behaviour facets default to commitment + ZK predicates.
 - `IAIDRegistry` interfaceId: `0x72750a54`.

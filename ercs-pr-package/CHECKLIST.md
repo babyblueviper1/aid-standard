@@ -61,3 +61,8 @@ Commit message: `Add ERC: Agent Identity (AID)`.
 
 - [ ] On branch `add-erc-aid`: replace `ERCS/erc-8434.md`; replace `assets/erc-8434/contracts/AIDRegistry.sol`, `assets/erc-8434/contracts/mocks/MockIdentityRegistry8004.sol`, `assets/erc-8434/schemas/facet.schema.json`, `assets/erc-8434/tools/aid-resolve/resolve.js`, `assets/erc-8434/vectors/aid-vectors.json`, `assets/erc-8434/vectors/aid-document.sample.json`, all four files under `assets/erc-8434/vectors/fixtures/`; add `assets/erc-8434/vectors/fixtures/interval-gap.json` and `timing.json`. One commit: `ERC-8434: authority intervals, stale-binding takeover, committedAt/subjectWindow (review round 1)`.
 - [ ] Leave a PR comment summarising the changes and linking the two Magicians replies.
+
+## 6. Content revision R2.5 (review round 2)
+
+- [ ] On branch `add-erc-aid`: replace `ERCS/erc-8434.md`, `assets/erc-8434/schemas/facet.schema.json`, `assets/erc-8434/schemas/aid-document.schema.json`, `assets/erc-8434/tools/aid-resolve/resolve.js`, `assets/erc-8434/vectors/aid-vectors.json`, `assets/erc-8434/vectors/aid-document.sample.json`, all fixtures; add `assets/erc-8434/vectors/fixtures/log-exclusivity.json`. Commit: `ERC-8434: issuer-declared commitment log profile, exclusivity check, no-merge rule (review round 2)`.
+- [ ] Do NOT upload PR-COMMENT-*.md files; they are comment text only.

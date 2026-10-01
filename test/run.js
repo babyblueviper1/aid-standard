@@ -271,6 +271,14 @@ async function main() {
     eq(r.facets.current[0].committedAtVerified, at);
   });
 
+  await t("exclusivity: issuer-declared log -> unique keeps pre-outcome; duplicate / undeclared downgrade", async () => {
+    const { resolveSnapshot } = require("../tools/aid-resolve/resolve");
+    const fx = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assets", "erc-aid", "vectors", "fixtures", "log-exclusivity.json")));
+    const r = await resolveSnapshot(fx, 1791200000, { trustedTimestamps: fx.trustedTimestamps, issuerLogs: fx.issuerLogs, logEntries: fx.logEntries });
+    const got = r.facets.current.map((f) => [f.timing, f.exclusivity]);
+    eq(JSON.stringify(got), JSON.stringify([["pre-outcome", "unique"], ["integrity-only", "duplicate"], ["integrity-only", "undeclared"]]));
+  });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed) process.exit(1);
 }

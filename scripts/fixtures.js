@@ -28,4 +28,17 @@ const timed = (ft, until) => ({ facetType: ft, provenance: "ATTESTED", issuer: d
 const timingDoc = { version: "aid-document/v1", aid: doc.aid, binding: doc.binding, facets: [timed("aid:tasks/erc8414/v1", 1790700000), timed("aid:review/erc8004/v1", 1790500000)] };
 fs.writeFileSync(path.join(dir, "timing.json"), JSON.stringify({ ...base, document: timingDoc, documentDigest: ethers.keccak256(ethers.toUtf8Bytes(canonicalize(timingDoc))),
   trustedTimestamps: { "aid:tasks/erc8414/v1": 1790600000, "aid:review/erc8004/v1": 1790600000 } }, null, 2));
+// exclusivity against the issuer-declared commitment log (reference profile)
+const { logTag } = require("../tools/aid-resolve/resolve");
+const issuer = "eip155:11155111:0x4444444444444444444444444444444444444444";
+const LOG = "https://issuer.example.invalid/commitments";
+const exFacet = (ft, digest, logUri) => ({ facetType: ft, provenance: "ATTESTED", issuer, validUntil: 1799000000, observedAt: 1790600000, subjectWindow: { from: 1790000000, until: 1790700000 }, committedAt: { anchor: "ots", proof: { ots: "AAE=" }, log: { uri: logUri, position: 7 } }, digest, access: { mode: "PUBLIC" }, resolver: { kind: "erc8414", chainId: 11155111 } });
+const D1 = "0x" + "21".repeat(32), D2 = "0x" + "22".repeat(32), D3 = "0x" + "23".repeat(32);
+const fUnique = exFacet("aid:tasks/erc8414/v1", D1, LOG), fDup = exFacet("aid:review/erc8004/v1", D2, LOG), fUndeclared = exFacet("aid:behavior/core/v1", D3, "https://other.example.invalid/log");
+const exDoc = { version: "aid-document/v1", aid: doc.aid, binding: doc.binding, facets: [fUnique, fDup, fUndeclared] };
+const tagOf = (f) => logTag({ ...f, subject: doc.aid });
+fs.writeFileSync(path.join(dir, "log-exclusivity.json"), JSON.stringify({ ...base, document: exDoc, documentDigest: ethers.keccak256(ethers.toUtf8Bytes(canonicalize(exDoc))),
+  trustedTimestamps: { "aid:tasks/erc8414/v1": 1790600000, "aid:review/erc8004/v1": 1790600000, "aid:behavior/core/v1": 1790600000 },
+  issuerLogs: { [issuer]: { uri: LOG, declaredAt: 1789000000 } },
+  logEntries: { [LOG]: [{ tag: tagOf(fUnique), content: D1 }, { tag: tagOf(fDup), content: D2 }, { tag: tagOf(fDup), content: "0x" + "ff".repeat(32) }] } }, null, 2));
 console.log("fixtures written to", dir);
