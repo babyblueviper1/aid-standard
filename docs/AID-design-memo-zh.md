@@ -147,7 +147,7 @@ resolver     去哪复核：erc8004-identity | erc8004-reputation | erc8419-asse
 5. **OBSERVED facet 的算法钉法**：算法版本作为 8419 scheme 登记（descriptor 含算法哈希）是否足够，还是 AID 自己开一个 profiler registry？倾向复用 8419 scheme registry，不新增。
 6. **`retire()` 后地址继续交易怎么办？** 地址无法被"关掉"，Retired 只表示"此地址不再代表这个 Agent"；解析器对 Retired 地址之后的行为一律不归入该 AID 画像。需要在 Security Considerations 明写。
 7. 是否要给 Dormant 地址一个最低限度的"预留"操作（例如只声明 documentURI 而不绑定 8004）？倾向不要，保持"未绑定即 Dormant"的纯粹性。
-8. ~~依赖未合并的风险~~ **已决（2026-09-30，Gary：尽早拿批号最重要）**：不等 #2012。提交版 `ercs-pr-package/ERCS/erc-9999.md` 改为自包含：`requires` 只留 155/165/712/1271/8004；新增 §5 "Assertion registries"，把 AID 依赖的最小断言能力（`account` subject 编码、`resolve`/`check`、scheme 钉 hash、ATTESTED/PROVED 两种模式、expiry、事件）写成抽象接口，签名与 8419 完全一致，正文用文字说明"本仓库评审中的 Know-Your-Agent 框架提案是参考实现"，不出现编号、不加链接；8338/8414 同样改为"token-bound skill / task 合约"的描述性引用。源文本 `ERCS/erc-aid.md` 保留完整编号引用作为设计真相，提交版由 `scripts/make-filing-variant.py` 从源文本生成，不手改。三个 PR 合并后再开一个小 PR 补回编号和 `requires: 8419`。Magicians 帖没有 lint，可以自由链接 8419 和仓库。
+8. ~~依赖未合并的风险~~ **已决（2026-09-30，Gary：尽早拿批号最重要）**：不等 #2012。提交版 `ercs-pr-package/ERCS/erc-8434.md` 改为自包含：`requires` 只留 155/165/712/1271/8004；新增 §5 "Assertion registries"，把 AID 依赖的最小断言能力（`account` subject 编码、`resolve`/`check`、scheme 钉 hash、ATTESTED/PROVED 两种模式、expiry、事件）写成抽象接口，签名与 8419 完全一致，正文用文字说明"本仓库评审中的 Know-Your-Agent 框架提案是参考实现"，不出现编号、不加链接；8338/8414 同样改为"token-bound skill / task 合约"的描述性引用。源文本 `ERCS/erc-aid.md` 保留完整编号引用作为设计真相，提交版由 `scripts/make-filing-variant.py` 从源文本生成，不手改。三个 PR 合并后再开一个小 PR 补回编号和 `requires: 8419`。Magicians 帖没有 lint，可以自由链接 8419 和仓库。
 9. **EIP lint（R2 已按 eipw 规则核对）**：eipw 没有"正文引用必须列入 requires"的规则，所以 8338/8414 只链接不进 requires 是合规的；真正会红的是 `markdown-link-first`（每个 EIP/ERC 首次出现必须是链接）、`markdown-refs`（ERC 类提案必须写 ERC-X，因此 1271、55、165、6551 写作 ERC-）、`markdown-link-first-rfc`（RFC 首次出现必须链接）、`markdown-link-status`/`preamble-requires-status`（被链接/被 requires 的提案状态不得低于本提案——都是 Draft，合规）。这些已在 R2 文本里改齐。剩下唯一的硬阻塞仍是第 8 条：被链接的 `./eip-8419.md`、`./eip-8338.md`、`./eip-8414.md` 在 ethereum/ERCs master 上都还不存在（2026-09-30 核实三者均 404），HTMLProofer 会报断链。
 
 ---
@@ -159,7 +159,7 @@ resolver     去哪复核：erc8004-identity | erc8004-reputation | erc8419-asse
 | R1 | 本备忘录 + `ERCS/erc-aid.md` 骨架 + 仓库 README | 已确认 |
 | R2 | ERC 全文；`AIDRegistry.sol` 参考实现 + 22 项行为测试；`aid-document` / facet / 五个核心 facet content schema；vectors；`tools/aid-resolve` 参考解析器 | **已交付（2026-09-30）** |
 | R3 | Sepolia 部署（沿用 KYA 方式：沙箱签名、桌面内置浏览器广播）；worked examples 绑定 8004 官方 IdentityRegistry 上的示例 agent 与 8419 Sepolia 部署；Magicians 帖 | R2 后 |
-| R4 | ERCs PR（分支 `add-erc-aid`，占位 9999，自包含提交版）；`did:aid` method 规范 companion 提交 W3C did-extensions | Magicians 帖已发（topic 29805，2026-09-30），`discussions-to` 已填；文件包可直接上传开 PR |
+| R4 | ERCs PR（分支 `add-erc-aid`，ERC-8434 已分号，自包含提交版）；`did:aid` method 规范 companion 提交 W3C did-extensions | Magicians 帖已发（topic 29805，2026-09-30），`discussions-to` 已填；文件包可直接上传开 PR |
 
 ---
 

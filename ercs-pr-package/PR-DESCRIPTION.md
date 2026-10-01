@@ -1,4 +1,4 @@
-Title: Add ERC: Agent Identity (AID)
+Title: Add ERC-8434: Agent Identity (AID)
 
 ---
 
@@ -17,10 +17,10 @@ Key elements:
 
 ## Assets
 
-- `assets/erc-9999/contracts/` — `AIDRegistry.sol` reference implementation (no owner, no upgrade path, self-contained EIP-712 / ECDSA low-s / ERC-1271), interfaces, mocks
-- `assets/erc-9999/schemas/` — JSON Schemas for the AID Document, facet envelope and core facet content documents
-- `assets/erc-9999/vectors/` — test vectors (facetType keys, JCS digest, EIP-712 Bind digest, `account` subjectKey, interfaceId `0x72750a54`) and resolver fixtures
-- `assets/erc-9999/tools/aid-resolve/` — reference resolver
+- `assets/erc-8434/contracts/` — `AIDRegistry.sol` reference implementation (no owner, no upgrade path, self-contained EIP-712 / ECDSA low-s / ERC-1271), interfaces, mocks
+- `assets/erc-8434/schemas/` — JSON Schemas for the AID Document, facet envelope and core facet content documents
+- `assets/erc-8434/vectors/` — test vectors (facetType keys, JCS digest, EIP-712 Bind digest, `account` subjectKey, interfaceId `0x72750a54`) and resolver fixtures
+- `assets/erc-8434/tools/aid-resolve/` — reference resolver
 
 Source repository with the behavioural test suite (22 cases): https://github.com/garyyang-finchip/aid-standard
 

@@ -3,9 +3,9 @@
 <!-- Post title above. Category: ERCs. Tags: erc, agents, identity, erc-8004 -->
 
 **Draft:** https://github.com/garyyang-finchip/aid-standard/blob/main/ERCS/erc-aid.md
-**Filing variant (what goes to ethereum/ERCs):** https://github.com/garyyang-finchip/aid-standard/blob/main/ercs-pr-package/ERCS/erc-9999.md
+**Filing variant (what goes to ethereum/ERCs):** https://github.com/garyyang-finchip/aid-standard/blob/main/ercs-pr-package/ERCS/erc-8434.md
 **Reference implementation, schemas, vectors, resolver, tests:** https://github.com/garyyang-finchip/aid-standard
-**ERCs PR:** (to be added)
+**ERCs PR:** https://github.com/ethereum/ERCs/pull/2044
 
 ## One paragraph
 

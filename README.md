@@ -1,6 +1,6 @@
 # aid-standard — Agent Identity (AID)
 
-Draft ERC: **Agent Identity (AID)** — address-anchored identity for live agents, layered on ERC-8004 (identity, feedback) and ERC-8419 (KYA / ZK assertions), compatible with ERC-8338 (skills) and ERC-8414 (tasks).
+**ERC-8434 — Agent Identity (AID)** (Draft, PR #2044) — address-anchored identity for live agents, layered on ERC-8004 (identity, feedback) and ERC-8419 (KYA / ZK assertions), compatible with ERC-8338 (skills) and ERC-8414 (tasks).
 
 > Any address is a dormant AID. It becomes active when a live agent demonstrably operates behind it.
 
@@ -9,11 +9,11 @@ Status: **round 2 complete — full draft text, reference implementation, schema
 ## Layout
 
 ```
-ERCS/erc-aid.md                       EIP-1 formatted draft (placeholder number 9999; becomes ERCS/erc-NNNN.md in the ERCs PR)
+ERCS/erc-aid.md                       EIP-1 formatted draft (ERC-8434 (assigned 2026-10-01 in PR #2044))
 docs/AID-design-memo-zh.md            中文设计备忘录 v0.2（决策记录 + R2 交付说明）
 docs/magicians-post.md                Ethereum Magicians thread text (post first, then fill discussions-to)
-ercs-pr-package/                      ready-to-upload file set for the ethereum/ERCs PR (erc-9999 paths, self-contained filing variant) + PR description + checklist
-scripts/make-filing-variant.py        regenerates ercs-pr-package/ERCS/erc-9999.md from ERCS/erc-aid.md
+ercs-pr-package/                      ready-to-upload file set for the ethereum/ERCs PR (erc-8434 paths, self-contained filing variant) + PR description + checklist
+scripts/make-filing-variant.py        regenerates ercs-pr-package/ERCS/erc-8434.md from ERCS/erc-aid.md
 LICENSE.md                            CC0-1.0
 assets/erc-aid/
   contracts/AIDRegistry.sol           reference registry (no owner, no upgrade, self-contained EIP-712/1271)
@@ -59,7 +59,7 @@ node tools/aid-resolve/resolve.js --fixture assets/erc-aid/vectors/fixtures/acti
 
 - ERCs PR branch: `add-erc-aid`, cut from `ethereum/ERCs` **upstream** master. Never from the fork's master (reserved for PR #1879 / ERC-8338).
 - Rounds: R1 memo + skeleton (done) → R2 full text + contracts + schemas + vectors + resolver (done) → R3 Sepolia deployment + worked examples + Magicians thread → R4 ERCs PR + DID method companion.
-- Two texts, one design: `ERCS/erc-aid.md` (source; cites ERC-8419/8338/8414 by number, `requires: 8419`) and `ercs-pr-package/ERCS/erc-9999.md` (filing variant; self-contained, no references to still-unmerged proposals, so ethereum/ERCs CI can pass now). The filing variant is generated, never hand-edited. Numbered references are restored by a follow-up PR once #2012 / #1879 / #2005 merge.
+- Two texts, one design: `ERCS/erc-aid.md` (source; cites ERC-8419/8338/8414 by number, `requires: 8419`) and `ercs-pr-package/ERCS/erc-8434.md` (filing variant; self-contained, no references to still-unmerged proposals, so ethereum/ERCs CI can pass now). The filing variant is generated, never hand-edited. Numbered references are restored by a follow-up PR once #2012 / #1879 / #2005 merge.
 
 ## Related
 

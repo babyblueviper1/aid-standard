@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Derive the ethereum/ERCs filing variant (ercs-pr-package/ERCS/erc-9999.md) from ERCS/erc-aid.md.
+"""Derive the ethereum/ERCs filing variant (ercs-pr-package/ERCS/erc-8434.md) from ERCS/erc-aid.md.
 
 The source text is the design truth and references three proposals that are still open PRs
 (KYA Framework, Token-Bound Executable Skills, Token-Bound Task Tenders). Their files do not exist
@@ -125,6 +125,6 @@ rep("**No governance surface.**", '''**Assertion registries as an interface, not
 bad = re.findall(r"(?i)\b(?:eip|erc)-(?:8419|8338|8414)\b", s)
 if bad:
     sys.exit(f"unmerged proposal tokens remain: {bad}")
-out = root / "ercs-pr-package" / "ERCS" / "erc-9999.md"
+out = root / "ercs-pr-package" / "ERCS" / "erc-8434.md"
 out.write_text(s)
 print("wrote", out, len(s), "bytes")

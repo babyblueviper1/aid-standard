@@ -4,7 +4,7 @@ Same procedure as `add-erc-kya` (PR #2012). The fork's `master` is reserved for 
 
 ## 0. Preconditions
 
-- [ ] `ERCS/erc-9999.md` in this package is the **filing variant**: self-contained, `requires: 155, 165, 712, 1271, 8004`, no reference by number to the three still-open proposals (KYA Framework #2012, Skills #1879, Task Tenders #2005). It is generated from the source text by `scripts/make-filing-variant.py`; regenerate after any edit to `ERCS/erc-aid.md`.
+- [ ] `ERCS/erc-8434.md` in this package is the **filing variant**: self-contained, `requires: 155, 165, 712, 1271, 8004`, no reference by number to the three still-open proposals (KYA Framework #2012, Skills #1879, Task Tenders #2005). It is generated from the source text by `scripts/make-filing-variant.py`; regenerate after any edit to `ERCS/erc-aid.md`.
 - [ ] Post the Magicians thread first and put its URL into `discussions-to` before uploading — eipw rejects a placeholder URL (`preamble-discussions-to`). Thread title: `ERC-9999: Agent Identity (AID)` (renamed after a number is assigned). The thread MAY link the KYA Framework thread and the aid-standard repo freely; Magicians has no lint.
 - [ ] After #2012 (and #1879 / #2005) merge: open a follow-up PR that restores the numbered references and adds `requires: 8419` (the source text `ERCS/erc-aid.md` already has them).
 
@@ -16,26 +16,26 @@ Same procedure as `add-erc-kya` (PR #2012). The fork's `master` is reserved for 
 ## 2. Upload (exact paths)
 
 ```
-ERCS/erc-9999.md
-assets/erc-9999/contracts/AIDRegistry.sol
-assets/erc-9999/contracts/interfaces/IAIDRegistry.sol
-assets/erc-9999/contracts/interfaces/IERC8004Identity.sol
-assets/erc-9999/contracts/mocks/MockIdentityRegistry8004.sol
-assets/erc-9999/schemas/aid-document.schema.json
-assets/erc-9999/schemas/facet.schema.json
-assets/erc-9999/schemas/facets/behavior-v1.schema.json
-assets/erc-9999/schemas/facets/finance-observed-v1.schema.json
-assets/erc-9999/schemas/facets/review-erc8004-v1.schema.json
-assets/erc-9999/schemas/facets/skills-erc8338-v1.schema.json
-assets/erc-9999/schemas/facets/tasks-erc8414-v1.schema.json
-assets/erc-9999/tools/jcs.js
-assets/erc-9999/tools/aid-resolve/resolve.js
-assets/erc-9999/vectors/aid-vectors.json
-assets/erc-9999/vectors/aid-document.sample.json
-assets/erc-9999/vectors/fixtures/active.json
-assets/erc-9999/vectors/fixtures/active-flag-false.json
-assets/erc-9999/vectors/fixtures/retired.json
-assets/erc-9999/vectors/fixtures/bad-digest.json
+ERCS/erc-8434.md
+assets/erc-8434/contracts/AIDRegistry.sol
+assets/erc-8434/contracts/interfaces/IAIDRegistry.sol
+assets/erc-8434/contracts/interfaces/IERC8004Identity.sol
+assets/erc-8434/contracts/mocks/MockIdentityRegistry8004.sol
+assets/erc-8434/schemas/aid-document.schema.json
+assets/erc-8434/schemas/facet.schema.json
+assets/erc-8434/schemas/facets/behavior-v1.schema.json
+assets/erc-8434/schemas/facets/finance-observed-v1.schema.json
+assets/erc-8434/schemas/facets/review-erc8004-v1.schema.json
+assets/erc-8434/schemas/facets/skills-erc8338-v1.schema.json
+assets/erc-8434/schemas/facets/tasks-erc8414-v1.schema.json
+assets/erc-8434/tools/jcs.js
+assets/erc-8434/tools/aid-resolve/resolve.js
+assets/erc-8434/vectors/aid-vectors.json
+assets/erc-8434/vectors/aid-document.sample.json
+assets/erc-8434/vectors/fixtures/active.json
+assets/erc-8434/vectors/fixtures/active-flag-false.json
+assets/erc-8434/vectors/fixtures/retired.json
+assets/erc-8434/vectors/fixtures/bad-digest.json
 ```
 
 Commit message: `Add ERC: Agent Identity (AID)`.
@@ -45,10 +45,14 @@ Commit message: `Add ERC: Agent Identity (AID)`.
 - [ ] base: `ethereum/ERCs` `master` ← head: `garyyang-finchip/ERCs` `add-erc-aid`
 - [ ] Title: `Add ERC: Agent Identity (AID)`
 - [ ] Body: PR-DESCRIPTION.md
-- [ ] Expect the editor bot to assign a number and ask to rename `erc-9999.md` → `erc-NNNN.md`, update `eip:` and every `assets/erc-9999/` path (a `sed` of `9999` → `NNNN` across the branch is sufficient; the vectors file contains no `9999`).
+- [ ] Asset links inside the ERC text MUST use `../assets/eip-8434/...` even though the directory is `assets/erc-8434/`: the ERCs site build renames `assets/erc-*` → `assets/eip-*` (see `.github/workflows/ci.yml`, "Merge Repos"). Links with `erc-` 404 in HTMLProofer (PR #2044 run 2, and the ERC-8414 incident).
+- [x] Number assigned: **ERC-8434** (2026-10-01). Package regenerated with `eip: 8434`, `ERCS/erc-8434.md`, `assets/erc-8434/`, links `../assets/eip-8434/`, `discussions-to` = renamed thread.
 
-## 4. After a number is assigned
+## 4. After a number is assigned (do this on branch `add-erc-aid`, PR #2044)
 
-- [ ] Rename file + paths, patch `discussions-to`, push to the same branch.
+- [ ] Upload the new `assets/erc-8434/` folder (drag the folder onto "Upload files" so the structure is kept).
+- [ ] Delete the old `assets/erc-9999/` directory (open it → `…` → Delete directory).
+- [ ] Open `ERCS/erc-9999.md` → edit → change the filename field to `erc-8434.md` and replace the content with `ERCS/erc-8434.md` from this package → commit `Rename to ERC-8434`.
+- [ ] Verify on the branch: `ERCS/erc-8434.md` exists, `ERCS/erc-9999.md` and `assets/erc-9999/` are gone, CI green.
 - [ ] Rename the Magicians thread to `ERC-NNNN: Agent Identity (AID)`.
 - [ ] Update `aid-standard` README and memo with the number.
