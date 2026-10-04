@@ -251,7 +251,7 @@ async function main() {
     eq(r.facets.current.length, 2, "in-interval review + address-keyed skills");
     const sk = r.facets.current.find((f) => f.facetType.startsWith("aid:skills")); eq(sk.attribution, "outside-interval");
   });
-  await t("timing: block-anchored commitment before subjectWindow.until -> pre-outcome; after -> integrity-only", async () => {
+  await t("timing: block-anchored commitment before subjectWindow.until -> pre-outcome; after or within tolerance -> integrity-only", async () => {
     const { resolveSnapshot } = require("../tools/aid-resolve/resolve");
     const n0 = await now();
     const digest = ethers.keccak256(ethers.toUtf8Bytes("verdict:task-7:accepted"));
@@ -263,11 +263,13 @@ async function main() {
     const post = { ...base, facetType: "aid:tasks/erc8414/v1", subjectWindow: { from: at - 1000, until: at - 1 } };
     const bad = { ...base, committedAt: { anchor: "block", proof: { chainId: 31337, txHash: "0x" + "11".repeat(32) } }, subjectWindow: { from: at - 100, until: at + 1000 } };
     const none = { ...base }; delete none.committedAt;
-    const doc = { version: "aid-document/v1", aid: `eip155:31337:${X.address}`, facets: [pre, post, bad, none] };
+    const near = { ...base, facetType: "aid:behavior/core/v1", subjectWindow: { from: at - 100, until: at + 5 } }; // inside the 12 s block tolerance
+    const doc = { version: "aid-document/v1", aid: `eip155:31337:${X.address}`, facets: [pre, post, bad, none, near] };
     const snap = { aid: doc.aid, state: 1, document: doc, documentDigest: ethers.keccak256(ethers.toUtf8Bytes(require("../tools/jcs").canonicalize(doc))) };
     const r = await resolveSnapshot(snap, at + 1, { provider: ethers.provider });
-    const t4 = r.facets.current.map((f) => f.timing);
-    eq(JSON.stringify(t4), JSON.stringify(["pre-outcome", "integrity-only", "integrity-only", "none"]));
+    const t5 = r.facets.current.map((f) => f.timing);
+    eq(JSON.stringify(t5), JSON.stringify(["pre-outcome", "integrity-only", "integrity-only", "none", "integrity-only"]));
+    if (!/within anchor tolerance/.test(r.facets.current[4].timingReason)) throw new Error("tolerance reason missing: " + r.facets.current[4].timingReason);
     eq(r.facets.current[0].committedAtVerified, at);
   });
 

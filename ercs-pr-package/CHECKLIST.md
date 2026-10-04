@@ -66,3 +66,8 @@ Commit message: `Add ERC: Agent Identity (AID)`.
 
 - [ ] On branch `add-erc-aid`: replace `ERCS/erc-8434.md`, `assets/erc-8434/schemas/facet.schema.json`, `assets/erc-8434/schemas/aid-document.schema.json`, `assets/erc-8434/tools/aid-resolve/resolve.js`, `assets/erc-8434/vectors/aid-vectors.json`, `assets/erc-8434/vectors/aid-document.sample.json`, all fixtures; add `assets/erc-8434/vectors/fixtures/log-exclusivity.json`. Commit: `ERC-8434: issuer-declared commitment log profile, exclusivity check, no-merge rule (review round 2)`.
 - [ ] Do NOT upload PR-COMMENT-*.md files; they are comment text only.
+
+## 7. Content revision R2.6 (review round 3: anchor clock tolerance)
+
+- [ ] On branch `add-erc-aid`: replace `ERCS/erc-8434.md`, `assets/erc-8434/tools/aid-resolve/resolve.js`, `assets/erc-8434/vectors/fixtures/timing.json` (and any other regenerated fixtures the delta lists). Commit: `ERC-8434: anchor clock tolerance for pre-outcome timing (review round 3)`. Paste PR-COMMENT-r2.6.md as a comment; do not upload it.
+- [ ] aid-standard: merge PR #1 first (after the two requested changes), then overlay this revision; `package.json` already carries the `ots-check` script.

@@ -25,9 +25,9 @@ fs.writeFileSync(path.join(dir, "interval-gap.json"), JSON.stringify({ ...base, 
   authorityIntervals: [{ from: 1790000000, until: 1790500000 }, { from: 1791000000, until: null }] }, null, 2));
 // timing: same facet shape, commitment proven before / after subjectWindow.until (trustedTimestamps stands in for a proof verifier)
 const timed = (ft, until) => ({ facetType: ft, provenance: "ATTESTED", issuer: doc.aid, validUntil: 1799000000, observedAt: 1790600000, subjectWindow: { from: 1790000000, until }, committedAt: { anchor: "ots", proof: { ots: "AAE=" } }, digest: "0x" + "11".repeat(32), access: { mode: "PUBLIC" }, resolver: { kind: "erc8414", chainId: 11155111 } });
-const timingDoc = { version: "aid-document/v1", aid: doc.aid, binding: doc.binding, facets: [timed("aid:tasks/erc8414/v1", 1790700000), timed("aid:review/erc8004/v1", 1790500000)] };
+const timingDoc = { version: "aid-document/v1", aid: doc.aid, binding: doc.binding, facets: [timed("aid:tasks/erc8414/v1", 1790700000), timed("aid:review/erc8004/v1", 1790500000), timed("aid:behavior/core/v1", 1790603600)] }; // third: until inside the 7200 s ots tolerance
 fs.writeFileSync(path.join(dir, "timing.json"), JSON.stringify({ ...base, document: timingDoc, documentDigest: ethers.keccak256(ethers.toUtf8Bytes(canonicalize(timingDoc))),
-  trustedTimestamps: { "aid:tasks/erc8414/v1": 1790600000, "aid:review/erc8004/v1": 1790600000 } }, null, 2));
+  trustedTimestamps: { "aid:tasks/erc8414/v1": 1790600000, "aid:review/erc8004/v1": 1790600000, "aid:behavior/core/v1": 1790600000 } }, null, 2));
 // exclusivity against the issuer-declared commitment log (reference profile)
 const { logTag } = require("../tools/aid-resolve/resolve");
 const issuer = "eip155:11155111:0x4444444444444444444444444444444444444444";
