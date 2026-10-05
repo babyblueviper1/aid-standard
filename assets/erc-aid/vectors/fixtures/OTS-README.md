@@ -2,7 +2,7 @@
 
 `ots-timing.json` runs a real OpenTimestamps proof through the reference resolver and gives the three timing outcomes `timingOf` defines.
 
-- **Facet digest** `0x1895ccf6a8cc5412f64e7272690997b0837bfcdfdab803281f52cfe60471f74d` = `keccak256(JCS(ots-facet-content.json))`. The content is a forward verdict, published before its outcome at https://api.babyblueviper.com/ledger/270.
+- **Facet digest** `0x1895ccf6a8cc5412f64e7272690997b0837bfcdfdab803281f52cfe60471f74d`: the digest of a third-party document stamped on 2026-10-01. Its content is not part of this repository; the proof is over the digest, which is all the verifier needs.
 - **Stamp**: submitted 2026-10-01T11:34:41Z to four public calendars; confirmed in Bitcoin block 969451 (header timestamp 1790863234 = 2026-10-01T14:20:34Z).
 - **Offline**: `ots-proof.json` carries the `.ots` file (base64) and the 80-byte header of that block, pinned by `blockHash`. Anyone can check the block against any explorer. No network is used by the check.
 

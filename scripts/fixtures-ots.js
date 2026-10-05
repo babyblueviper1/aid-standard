@@ -1,6 +1,6 @@
 // OpenTimestamps `committedAt` fixture (run after scripts/vectors.js): a REAL Bitcoin-anchored proof, three timing outcomes.
-// The facet digest 0x1895ccf6…f74d = keccak256(JCS(content.json)) of an invinoveritas forward verdict (ledger #270) that was
-// stamped on 2026-10-01T11:34:41Z and confirmed in Bitcoin block 969451 (header timestamp 1790863234). The proof carries the
+// The facet digest 0x1895ccf6…f74d is the keccak256 of a third-party document stamped on 2026-10-01T11:34:41Z (its content is not
+// part of this repository; the proof is over the digest, which is all the verifier needs). It was and confirmed in Bitcoin block 969451 (header timestamp 1790863234). The proof carries the
 // 80-byte block header, pinned by its hash, so verification is offline: any explorer can confirm the block independently.
 //   a) subjectWindow.until after the block time          -> timing "pre-outcome"
 //   b) the same proof, until BEFORE the block time        -> "integrity-only", "committed after subjectWindow.until"
@@ -14,8 +14,7 @@ const src = path.join(__dirname, "..", "assets", "erc-aid", "vectors");
 const v = JSON.parse(fs.readFileSync(path.join(src, "aid-vectors.json")));
 const doc = v.aidDocument.document;
 const proof = JSON.parse(fs.readFileSync(path.join(src, "fixtures", "ots-proof.json")));      // { ots (base64), blockHeader, blockHash }
-const content = fs.readFileSync(path.join(src, "fixtures", "ots-facet-content.json"), "utf8");
-const digest = ethers.keccak256(ethers.toUtf8Bytes(canonicalize(JSON.parse(content))));
+const digest = "0x1895ccf6a8cc5412f64e7272690997b0837bfcdfdab803281f52cfe60471f74d";   // the stamped digest (content not in this repository)
 const base = {
   aid: doc.aid, state: 1,
   binding: { registry: v.inputs.identityRegistry, agentId: v.inputs.agentId, boundAt: 1790000000 },
