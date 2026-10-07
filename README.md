@@ -4,7 +4,7 @@
 
 > Any address is a dormant AID. It becomes active when a live agent demonstrably operates behind it.
 
-Status: **ERC-8434 filed (PR #2044). R2.5 — two review rounds incorporated:** authority intervals + stale-binding takeover (chugarchugarr), `subjectWindow` / `committedAt` timing and issuer-declared commitment-log profile (babyblueviper1). Not yet deployed to Sepolia (round 3).
+Status: **ERC-8434 filed (PR #2044). R2.7 — four review rounds incorporated:** authority intervals + stale-binding takeover (chugarchugarr); `subjectWindow` / `committedAt` timing, issuer-declared commitment-log profile and anchor clock tolerance (babyblueviper1); supersession + finality (predge-ai). Optional OTS verifier merged (aid-standard#1). Not yet deployed to Sepolia.
 
 ## Layout
 
@@ -26,7 +26,7 @@ tools/jcs.js                          RFC 8785 canonicalisation used for documen
 tools/aid-resolve/resolve.js          reference resolver (RPC or fixture mode)
 scripts/compile.js                    solc-js compile → build/*.json
 scripts/vectors.js · fixtures.js      regenerate vectors and fixtures
-test/run.js                           behavioural tests on a local Hardhat chain (29 cases)
+test/run.js                           behavioural tests on a local Hardhat chain (30 cases)
 docs/magicians-replies-*.md           posted replies + decisions per review round
 tools/aid-resolve/verifiers/ots.js    optional OpenTimestamps verifier plug-in (contributed; not part of the ERC assets)
 ```
@@ -56,6 +56,7 @@ node tools/aid-resolve/resolve.js --fixture assets/erc-aid/vectors/fixtures/acti
 - **Timing** (orthogonal to provenance): optional `subjectWindow` + `committedAt {anchor: block|rfc3161|ots, proof, log?}`; resolver reports `pre-outcome` only when the proven time plus the anchor's clock tolerance (block 12 s, ots 7200 s, rfc3161 stated accuracy) is earlier than `subjectWindow.until`, else `integrity-only`. Informative reference profile: issuer-declared append-only commitment log (`commitmentLog` in the issuer's AID Document) with witnessed, periodically anchored heads; resolver checks exactly-one-entry per `(subject, facetType, subjectWindow)` when it can read the log.
 - **Thin layer**: the registry stores only anchor-authorised records (binding, heartbeat, liveness window, document URI, self facets, retirement). Credit, KYA, audits and profiler outputs are ERC-8419 assertions with subject type `account`; raw feedback is ERC-8004 Reputation; skill/task history is derived from ERC-8338/8414 events.
 - **Facets** carry provenance (`SELF | OBSERVED | ATTESTED | PROVED`), a mandatory `validUntil`, a digest/commitment and an access mode (`PUBLIC | GATED | ZK`). Financial-behaviour facets default to commitment + ZK predicates.
+- **Supersession & finality**: optional `supersedes` (same issuer only; superseded facet is history even inside its window, discoverable from the issuer's log) and `finality: provisional | final` (absent = final; domain state machines live in facet-type schemas).
 - `IAIDRegistry` interfaceId: `0x72750a54`.
 
 ## Process rules

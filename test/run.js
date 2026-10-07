@@ -281,6 +281,20 @@ async function main() {
     eq(JSON.stringify(got), JSON.stringify([["pre-outcome", "unique"], ["integrity-only", "duplicate"], ["integrity-only", "undeclared"]]));
   });
 
+  await t("supersession: document chain -> old is history; hidden replacement found in issuer log; cross-issuer refused", async () => {
+    const { resolveSnapshot } = require("../tools/aid-resolve/resolve");
+    const load = (n) => JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assets", "erc-aid", "vectors", "fixtures", n)));
+    const run = async (fx) => resolveSnapshot(fx, 1791200000, { trustedTimestamps: fx.trustedTimestamps, issuerLogs: fx.issuerLogs, logEntries: fx.logEntries });
+    let r = await run(load("supersession-chain.json"));
+    eq(r.facets.current.length, 1); eq(r.facets.current[0].finality, "final"); eq(r.facets.current[0].exclusivity, "unique-latest");
+    eq(r.facets.history.length, 1); eq(r.facets.history[0].supersededBy.toLowerCase(), r.facets.current[0].digest.toLowerCase());
+    r = await run(load("supersession-hidden.json"));
+    eq(r.facets.current.length, 0); eq(r.facets.history.length, 1); eq(r.facets.history[0].reason, "superseded in issuer log");
+    r = await run(load("supersession-cross-issuer.json"));
+    eq(r.facets.current.length, 2); if (!r.reasons.some((x) => /cross-issuer/.test(x))) throw new Error("cross-issuer not reported");
+    const old = r.facets.current.find((f) => f.finality === "provisional"); eq(old.timing, "pre-outcome");
+  });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed) process.exit(1);
 }

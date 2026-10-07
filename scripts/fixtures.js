@@ -41,4 +41,18 @@ fs.writeFileSync(path.join(dir, "log-exclusivity.json"), JSON.stringify({ ...bas
   trustedTimestamps: { "aid:tasks/erc8414/v1": 1790600000, "aid:review/erc8004/v1": 1790600000, "aid:behavior/core/v1": 1790600000 },
   issuerLogs: { [issuer]: { uri: LOG, declaredAt: 1789000000 } },
   logEntries: { [LOG]: [{ tag: tagOf(fUnique), content: D1 }, { tag: tagOf(fDup), content: D2 }, { tag: tagOf(fDup), content: "0x" + "ff".repeat(32) }] } }, null, 2));
+// supersession: (1) chain in the document, (2) replacement visible only in the issuer log, (3) cross-issuer refused
+const OTHER = "eip155:11155111:0x5555555555555555555555555555555555555555";
+const S_OLD = "0x" + "31".repeat(32), S_NEW = "0x" + "32".repeat(32);
+const outcome = (digest, extra) => ({ facetType: "aid:tasks/erc8414/v1", provenance: "ATTESTED", issuer, validUntil: 1799000000, observedAt: 1790600000, subjectWindow: { from: 1790000000, until: 1790700000 }, committedAt: { anchor: "ots", proof: { ots: "AAE=" }, log: { uri: LOG, position: 9 } }, digest, access: { mode: "PUBLIC" }, resolver: { kind: "erc8414", chainId: 11155111 }, ...extra });
+const oldF = outcome(S_OLD, { finality: "provisional" });
+const newF = outcome(S_NEW, { finality: "final", supersedes: S_OLD });
+const tagS = logTag({ ...oldF, subject: doc.aid });
+const logChain = { [LOG]: [{ tag: tagS, content: S_OLD }, { tag: tagS, content: S_NEW, supersedes: S_OLD }] };
+const common = { ...base, trustedTimestamps: { "aid:tasks/erc8414/v1": 1790600000 }, issuerLogs: { [issuer]: { uri: LOG, declaredAt: 1789000000 } } };
+const mkDoc = (facets) => { const d = { version: "aid-document/v1", aid: doc.aid, binding: doc.binding, facets }; return { document: d, documentDigest: ethers.keccak256(ethers.toUtf8Bytes(canonicalize(d))) }; };
+fs.writeFileSync(path.join(dir, "supersession-chain.json"), JSON.stringify({ ...common, ...mkDoc([oldF, newF]), logEntries: logChain }, null, 2));
+fs.writeFileSync(path.join(dir, "supersession-hidden.json"), JSON.stringify({ ...common, ...mkDoc([oldF]), logEntries: logChain }, null, 2));
+const foreign = outcome(S_NEW, { issuer: OTHER, finality: "final", supersedes: S_OLD, committedAt: { anchor: "ots", proof: { ots: "AAE=" } } });
+fs.writeFileSync(path.join(dir, "supersession-cross-issuer.json"), JSON.stringify({ ...common, ...mkDoc([oldF, foreign]), logEntries: { [LOG]: [{ tag: tagS, content: S_OLD }] } }, null, 2));
 console.log("fixtures written to", dir);

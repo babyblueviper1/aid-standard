@@ -71,3 +71,8 @@ Commit message: `Add ERC: Agent Identity (AID)`.
 
 - [ ] On branch `add-erc-aid`: replace `ERCS/erc-8434.md`, `assets/erc-8434/tools/aid-resolve/resolve.js`, `assets/erc-8434/vectors/fixtures/timing.json` (and any other regenerated fixtures the delta lists). Commit: `ERC-8434: anchor clock tolerance for pre-outcome timing (review round 3)`. Paste PR-COMMENT-r2.6.md as a comment; do not upload it.
 - [ ] aid-standard: merge PR #1 first (after the two requested changes), then overlay this revision; `package.json` already carries the `ots-check` script.
+
+## 8. Content revision R2.7 (review round 4: supersession and finality)
+
+- [ ] On branch `add-erc-aid`: replace `ERCS/erc-8434.md`, `assets/erc-8434/schemas/facet.schema.json`, `assets/erc-8434/tools/aid-resolve/resolve.js`; add `assets/erc-8434/vectors/fixtures/supersession-chain.json`, `supersession-hidden.json`, `supersession-cross-issuer.json`. Commit: `ERC-8434: supersession and finality on the facet envelope (review round 4)`. Paste PR-COMMENT-r2.7.md as a comment; do not upload it.
+- [ ] aid-standard: overlay the same plus `scripts/fixtures.js`, `test/run.js`, docs. The merged OTS verifier files are untouched.
