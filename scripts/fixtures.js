@@ -55,21 +55,23 @@ fs.writeFileSync(path.join(dir, "supersession-chain.json"), JSON.stringify({ ...
 fs.writeFileSync(path.join(dir, "supersession-hidden.json"), JSON.stringify({ ...common, ...mkDoc([oldF]), logEntries: logChain }, null, 2));
 const foreign = outcome(S_NEW, { issuer: OTHER, finality: "final", supersedes: S_OLD, committedAt: { anchor: "ots", proof: { ots: "AAE=" } } });
 fs.writeFileSync(path.join(dir, "supersession-cross-issuer.json"), JSON.stringify({ ...common, ...mkDoc([oldF, foreign]), logEntries: { [LOG]: [{ tag: tagS, content: S_OLD }] } }, null, 2));
-// supersession timing: six final/provisional pre-outcome facets, each replaced only in the issuer log. The replacement is
+// supersession timing: seven final/provisional pre-outcome facets, each replaced only in the issuer log. The replacement is
 // proven (anchored-head time `provenAt`) before the outcome, after it, or not at all; the provisional one is replaced after
-// the outcome, which is the expected dispute flow and is not a reversal. Timestamps are keyed by digest.
+// the outcome, which is the expected dispute flow and is not a reversal (it is counted in issuerRevisions); a second
+// provisional one is replaced before the outcome and is not counted. Timestamps are keyed by digest.
 const T = (n) => "0x" + n.repeat(32);
 const stF = (ft, digest, extra) => ({ ...outcome(digest, extra), facetType: ft });
 const tB = stF("aid:tasks/erc8414/v1", T("41"), { finality: "final" }), tA = stF("aid:review/erc8004/v1", T("42"), { finality: "final" });
 const tU = stF("aid:behavior/core/v1", T("43"), { finality: "final" }), tP = stF("aid:finance/observed/v1", T("44"), { finality: "provisional" });
 const tT = stF("aid:skills/erc8338/v1", T("45"), { finality: "final" }); // replacement anchored 1 h before until: inside the 7200 s ots tolerance
 const tL = stF("aid:core/kya/v1", T("46"), { finality: "final" }); // itself committed after until (integrity-only): replacing it later is no reversal
+const tQ = stF("aid:finance/quote/v1", T("47"), { finality: "provisional" }); // provisional, corrected before the outcome: not counted
 const entries = [];
-for (const [f, repl, provenAt] of [[tB, T("51"), 1790650000], [tA, T("52"), 1790800000], [tU, T("53"), null], [tP, T("54"), 1790800000], [tT, T("55"), 1790696400], [tL, T("56"), 1790900000]]) {
+for (const [f, repl, provenAt] of [[tB, T("51"), 1790650000], [tA, T("52"), 1790800000], [tU, T("53"), null], [tP, T("54"), 1790800000], [tT, T("55"), 1790696400], [tL, T("56"), 1790900000], [tQ, T("57"), 1790650000]]) {
   const tag = logTag({ ...f, subject: doc.aid });
   entries.push({ tag, content: f.digest }, { tag, content: repl, supersedes: f.digest, ...(provenAt ? { provenAt, anchor: "ots" } : {}) });
 }
-fs.writeFileSync(path.join(dir, "supersession-timing.json"), JSON.stringify({ ...base, ...mkDoc([tB, tA, tU, tP, tT, tL]),
-  trustedTimestamps: Object.fromEntries([tB, tA, tU, tP, tT, tL].map((f) => [f.digest, f === tL ? 1790800000 : 1790600000])),
+fs.writeFileSync(path.join(dir, "supersession-timing.json"), JSON.stringify({ ...base, ...mkDoc([tB, tA, tU, tP, tT, tL, tQ]),
+  trustedTimestamps: Object.fromEntries([tB, tA, tU, tP, tT, tL, tQ].map((f) => [f.digest, f === tL ? 1790800000 : 1790600000])),
   issuerLogs: { [issuer]: { uri: LOG, declaredAt: 1789000000 } }, logEntries: { [LOG]: entries } }, null, 2));
 console.log("fixtures written to", dir);

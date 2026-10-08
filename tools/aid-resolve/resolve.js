@@ -40,6 +40,10 @@
 //    the claim made in time was withdrawn after the outcome, and a reader scoring pre-outcome claims scores it.
 //  - FINALITY: `finality` is reported (absent = "final"); a provisional facet may be current but is never
 //    presented as final.
+//  - ISSUER REVISIONS (report only, changes no rule): `issuerRevisions[issuer]` counts the issuer's pre-outcome
+//    facets by finality, its `final` facets reversed after the outcome, and its `provisional` facets superseded
+//    not-before-outcome. `reversedAfterOutcome` stays limited to `final`, so an issuer that marks every claim
+//    `provisional` and corrects after the outcome is never flagged per facet; the counts let a reader see that pattern.
 const fs = require("fs");
 const { ethers } = require("ethers");
 const { canonicalize } = require("../jcs");
@@ -257,6 +261,19 @@ function supersessionTimingOf(facet, ownTiming, provenAt, anchor) {
   return out;
 }
 
+/** Per-issuer revision counts over resolved facets (current + history). Report only. */
+function issuerRevisionsOf(facets) {
+  const out = {};
+  for (const f of [...facets.current, ...facets.history]) {
+    if (f.timing !== "pre-outcome") continue;
+    const k = f.issuer || "unknown";
+    const c = out[k] || (out[k] = { preOutcomeFinal: 0, preOutcomeProvisional: 0, finalReversedAfterOutcome: 0, provisionalSupersededAfterOutcome: 0 });
+    if ((f.finality || "final") === "final") { c.preOutcomeFinal++; if (f.reversedAfterOutcome) c.finalReversedAfterOutcome++; }
+    else { c.preOutcomeProvisional++; if (f.supersessionTiming === "not-before-outcome") c.provisionalSupersededAfterOutcome++; }
+  }
+  return out;
+}
+
 function timingOf(facet, provenAt) {
   if (!facet.committedAt) return { timing: "none" };
   if (provenAt == null) return { timing: "integrity-only", timingReason: "commitment not verified" };
@@ -339,7 +356,7 @@ async function resolveSnapshot(snap, now, ctx = {}) {
     facets.current.push(tag);
   }
   if (onChainState === "RETIRED") reasons.push("RETIRED: activity after retirement MUST NOT be attributed to this AID; successor=" + (snap.successor || "none"));
-  return { onChainState, resolvedState, reasons, binding: snap.binding, lastSeen: snap.lastSeen, livenessWindow: snap.livenessWindow, authorityIntervals: intervals, document, facets };
+  return { onChainState, resolvedState, reasons, binding: snap.binding, lastSeen: snap.lastSeen, livenessWindow: snap.livenessWindow, authorityIntervals: intervals, document, facets, issuerRevisions: issuerRevisionsOf(facets) };
 }
 
 async function snapshotFromChain(rpc, registry, anchor, fetchImpl, fromBlock = 0) {
@@ -374,5 +391,5 @@ async function main() {
   console.log(JSON.stringify(await resolveSnapshot(snap, now, ctx), null, 2));
 }
 
-module.exports = { supersessionTimingOf, resolveSnapshot, snapshotFromChain, reconstructIntervals, verifyCommitment, timingOf, toleranceOf, ANCHOR_TOLERANCE, exclusivityOf, supersessionMap, logTag, STATE };
+module.exports = { supersessionTimingOf, issuerRevisionsOf, resolveSnapshot, snapshotFromChain, reconstructIntervals, verifyCommitment, timingOf, toleranceOf, ANCHOR_TOLERANCE, exclusivityOf, supersessionMap, logTag, STATE };
 if (require.main === module) main().catch((e) => { console.error(e); process.exit(1); });
