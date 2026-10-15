@@ -1,0 +1,7 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "erc-8434-worked-example",
+  "description": "Demo agent for the ERC-8434 (AID) reference deployment on Sepolia. Anchored by its owner/agentWallet address through AIDRegistry.",
+  "image": "",
+  "active": true
+}

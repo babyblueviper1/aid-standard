@@ -1,0 +1,31 @@
+{
+  "version": "aid-document/v1",
+  "aid": "eip155:11155111:0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+  "did": "did:aid:eip155:11155111:0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+  "binding": {
+    "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+    "agentId": 11039
+  },
+  "livenessWindow": 7776000,
+  "updatedAt": 1792084164,
+  "facets": [
+    {
+      "facetType": "aid:core/identity/v1",
+      "provenance": "SELF",
+      "issuer": "eip155:11155111:0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+      "validFrom": 1792084164,
+      "validUntil": 1823620164,
+      "observedAt": 1792084164,
+      "digest": "0x1664b7e01137a0a2d9a47014cba5c546c27dd1fbe19af3b59cd492d5cb01a7d1",
+      "access": {
+        "mode": "PUBLIC"
+      },
+      "resolver": {
+        "kind": "erc8004-identity",
+        "chainId": 11155111,
+        "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+        "agentId": 11039
+      }
+    }
+  ]
+}

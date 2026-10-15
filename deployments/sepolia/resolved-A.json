@@ -1,0 +1,139 @@
+{
+  "snapshot": {
+    "aid": "eip155:11155111:0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+    "state": 3,
+    "binding": null,
+    "lastSeen": 1792084512,
+    "livenessWindow": 7776000,
+    "successor": "0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+    "documentDigest": "0xb165e1791092ca278c94c6bf594270e31854eadc0c3f15d12b96a769a36816ed",
+    "document": {
+      "aid": "eip155:11155111:0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+      "binding": {
+        "agentId": 11039,
+        "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e"
+      },
+      "did": "did:aid:eip155:11155111:0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+      "facets": [
+        {
+          "access": {
+            "mode": "PUBLIC"
+          },
+          "digest": "0x1664b7e01137a0a2d9a47014cba5c546c27dd1fbe19af3b59cd492d5cb01a7d1",
+          "facetType": "aid:core/identity/v1",
+          "issuer": "eip155:11155111:0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+          "observedAt": 1792084164,
+          "provenance": "SELF",
+          "resolver": {
+            "agentId": 11039,
+            "chainId": 11155111,
+            "kind": "erc8004-identity",
+            "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e"
+          },
+          "validFrom": 1792084164,
+          "validUntil": 1823620164
+        }
+      ],
+      "livenessWindow": 7776000,
+      "updatedAt": 1792084164,
+      "version": "aid-document/v1"
+    },
+    "onChainFacets": {
+      "0x008ddbd0e4e88afd92b0db3ac1083307ac0c315aab41c878c6e4e3c95b2f3440": {
+        "digest": "0x1664b7e01137a0a2d9a47014cba5c546c27dd1fbe19af3b59cd492d5cb01a7d1",
+        "validFrom": 1792084164,
+        "validUntil": 1823620164,
+        "access": 0,
+        "uri": "data:application/json;base64,eyJhY3RpdmUiOnRydWUsImRlc2NyaXB0aW9uIjoiRGVtbyBhZ2VudCBmb3IgdGhlIEVSQy04NDM0IChBSUQpIHJlZmVyZW5jZSBkZXBsb3ltZW50IG9uIFNlcG9saWEuIEFuY2hvcmVkIGJ5IGl0cyBvd25lci9hZ2VudFdhbGxldCBhZGRyZXNzIHRocm91Z2ggQUlEUmVnaXN0cnkuIiwiaW1hZ2UiOiIiLCJuYW1lIjoiZXJjLTg0MzQtd29ya2VkLWV4YW1wbGUiLCJ0eXBlIjoiaHR0cHM6Ly9laXBzLmV0aGVyZXVtLm9yZy9FSVBTL2VpcC04MDA0I3JlZ2lzdHJhdGlvbi12MSJ9"
+      }
+    },
+    "registrationFile": null,
+    "authorityIntervals": [
+      {
+        "from": 1792084272,
+        "until": 1792084392,
+        "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+        "agentId": 11039
+      }
+    ]
+  },
+  "resolved": {
+    "onChainState": "RETIRED",
+    "resolvedState": "RETIRED",
+    "reasons": [
+      "RETIRED: activity after retirement MUST NOT be attributed to this AID; successor=0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2"
+    ],
+    "binding": null,
+    "lastSeen": 1792084512,
+    "livenessWindow": 7776000,
+    "authorityIntervals": [
+      {
+        "from": 1792084272,
+        "until": 1792084392,
+        "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+        "agentId": 11039
+      }
+    ],
+    "document": {
+      "aid": "eip155:11155111:0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+      "binding": {
+        "agentId": 11039,
+        "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e"
+      },
+      "did": "did:aid:eip155:11155111:0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+      "facets": [
+        {
+          "access": {
+            "mode": "PUBLIC"
+          },
+          "digest": "0x1664b7e01137a0a2d9a47014cba5c546c27dd1fbe19af3b59cd492d5cb01a7d1",
+          "facetType": "aid:core/identity/v1",
+          "issuer": "eip155:11155111:0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+          "observedAt": 1792084164,
+          "provenance": "SELF",
+          "resolver": {
+            "agentId": 11039,
+            "chainId": 11155111,
+            "kind": "erc8004-identity",
+            "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e"
+          },
+          "validFrom": 1792084164,
+          "validUntil": 1823620164
+        }
+      ],
+      "livenessWindow": 7776000,
+      "updatedAt": 1792084164,
+      "version": "aid-document/v1"
+    },
+    "alsoKnownAs": [],
+    "facets": {
+      "current": [],
+      "history": [],
+      "invalid": [],
+      "unattributable": [
+        {
+          "access": {
+            "mode": "PUBLIC"
+          },
+          "digest": "0x1664b7e01137a0a2d9a47014cba5c546c27dd1fbe19af3b59cd492d5cb01a7d1",
+          "facetType": "aid:core/identity/v1",
+          "issuer": "eip155:11155111:0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+          "observedAt": 1792084164,
+          "provenance": "SELF",
+          "resolver": {
+            "agentId": 11039,
+            "chainId": 11155111,
+            "kind": "erc8004-identity",
+            "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e"
+          },
+          "validFrom": 1792084164,
+          "validUntil": 1823620164,
+          "verified": false,
+          "finality": "final",
+          "attribution": "outside-interval",
+          "reason": "observed outside every authority interval"
+        }
+      ]
+    }
+  }
+}

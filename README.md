@@ -4,7 +4,7 @@
 
 > Any address is a dormant AID. It becomes active when a live agent demonstrably operates behind it.
 
-Status: **ERC-8434 filed (PR #2044). R2.8 — five review rounds incorporated:** authority intervals + stale-binding takeover (chugarchugarr, SergeevDmitry); `subjectWindow` / `committedAt` timing, issuer-declared commitment-log profile, anchor clock tolerance and supersession timing (babyblueviper1); supersession + finality + `finalizeBy` (predge-ai); mutual `alsoKnownAs` links (wjmelements). Optional OTS verifier merged (aid-standard#1), supersession-timing resolver logic merged (aid-standard#2). Not yet deployed to Sepolia.
+Status: **ERC-8434 filed (PR #2044). R2.8 — five review rounds incorporated:** authority intervals + stale-binding takeover (chugarchugarr, SergeevDmitry); `subjectWindow` / `committedAt` timing, issuer-declared commitment-log profile, anchor clock tolerance and supersession timing (babyblueviper1); supersession + finality + `finalizeBy` (predge-ai); mutual `alsoKnownAs` links (wjmelements). Optional OTS verifier merged (aid-standard#1), supersession-timing resolver logic merged (aid-standard#2). **Deployed to Sepolia 2026-10-15** with a worked example (see below).
 
 ## Layout
 
@@ -28,6 +28,10 @@ scripts/compile.js                    solc-js compile → build/*.json
 scripts/vectors.js · fixtures.js      regenerate vectors and fixtures
 test/run.js                           behavioural tests on a local Hardhat chain (33 cases)
 docs/magicians-replies-*.md           posted replies + decisions per review round
+docs/sepolia-worked-example.md        Sepolia reference deployment: timeline, what the resolver reports and why
+deployments/sepolia.json              addresses, constructor args, Sourcify match, every transaction of the worked example
+deployments/sepolia/                  recorded JSON-RPC responses (pinned block), resolver outputs, decoded AID Documents
+scripts/sepolia-replay.js             re-runs the reference resolver offline against the recorded responses (or live with --live)
 tools/aid-resolve/verifiers/ots.js    optional OpenTimestamps verifier plug-in (contributed; not part of the ERC assets)
 ```
 
@@ -47,6 +51,21 @@ node tools/aid-resolve/resolve.js --rpc https://rpc.sepolia.org --registry <AIDR
 node tools/aid-resolve/resolve.js --fixture assets/erc-aid/vectors/fixtures/active.json --now 1791000000
 ```
 
+## Sepolia
+
+| | |
+|---|---|
+| `AIDRegistry` | `0x01C05738eebD20DC80bBb9Fa1Ceb1165af8dA00F` (Sourcify exact match) |
+| ERC-8004 Identity Registry | `0x8004A818BFB912233c491871b3d84c89A494BD9e` (official) |
+| Worked example | agent 11039: anchor A binds → agent transferred → anchor B takes over the stale binding → A retires with successor B |
+
+```bash
+node scripts/sepolia-replay.js                               # offline: replays the recorded RPC responses, diffs against deployments/sepolia/resolved-*.json
+node scripts/sepolia-replay.js --live https://ethereum-sepolia-rpc.publicnode.com
+```
+
+Details in [docs/sepolia-worked-example.md](docs/sepolia-worked-example.md).
+
 ## Design summary
 
 - **Anchor** = `(eip155, chainId, address)`; CAIP-10 string `eip155:{chainId}:{address}`; DID form `did:aid:eip155:{chainId}:{address}` (companion DID method).
@@ -63,7 +82,7 @@ node tools/aid-resolve/resolve.js --fixture assets/erc-aid/vectors/fixtures/acti
 ## Process rules
 
 - ERCs PR branch: `add-erc-aid`, cut from `ethereum/ERCs` **upstream** master. Never from the fork's master (reserved for PR #1879 / ERC-8338).
-- Rounds: R1 memo + skeleton (done) → R2 full text + contracts + schemas + vectors + resolver (done) → R3 Sepolia deployment + worked examples + Magicians thread → R4 ERCs PR + DID method companion.
+- Rounds: R1 memo + skeleton (done) → R2 full text + contracts + schemas + vectors + resolver (done) → R3 Sepolia deployment + worked example (done 2026-10-15) → R4 ERCs PR (filed as #2044) + DID method companion.
 - Two texts, one design: `ERCS/erc-aid.md` (source; cites ERC-8419/8338/8414 by number, `requires: 8419`) and `ercs-pr-package/ERCS/erc-8434.md` (filing variant; self-contained, no references to still-unmerged proposals, so ethereum/ERCs CI can pass now). The filing variant is generated, never hand-edited. Numbered references are restored by a follow-up PR once #2012 / #1879 / #2005 merge.
 
 ## Related

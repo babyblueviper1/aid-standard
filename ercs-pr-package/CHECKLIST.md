@@ -82,3 +82,9 @@ Commit message: `Add ERC: Agent Identity (AID)`.
 - [ ] aid-standard first: squash-merge PR #2 (`babyblueviper1:supersession-timing`, code only) with the message `Report when a supersession was proven; flag a pre-outcome claim reversed after the outcome (contributed by @babyblueviper1)`, then overlay the R2.8 delta on the post-merge `main` (the delta already contains the PR #2 versions of `resolve.js`, `scripts/fixtures.js`, `test/run.js` and `supersession-timing.json`, so overlaying after the merge is a no-op for those parts and a change for the rest).
 - [ ] On branch `add-erc-aid` (PR #2044): replace `ERCS/erc-8434.md`, `assets/erc-8434/schemas/facet.schema.json`, `assets/erc-8434/tools/aid-resolve/resolve.js`; add `assets/erc-8434/vectors/fixtures/supersession-timing.json`, `finalization.json`, `also-known-as.json`. No OTS verifier, no `ots-*` fixtures, no `OTS-README.md`. Commit: `ERC-8434: supersession timing, finalizeBy, mutual alsoKnownAs, acknowledgements (review round 5)`. Paste PR-COMMENT-r2.8.md as a comment; do not upload it. Do not click "Update branch".
 - [ ] After CI is green: post the round-5 summary reply on the Magicians thread (docs/magicians-replies-2026-10-09.md).
+
+## 10. R3: Sepolia reference deployment (2026-10-15)
+
+- [ ] On branch `add-erc-aid` (PR #2044): replace `ERCS/erc-8434.md` only (one informative sentence in Reference Implementation). Commit: `ERC-8434: Sepolia reference deployment (informative)`. Paste PR-COMMENT-r3.md as a comment; do not upload it. Do not click "Update branch".
+- [ ] aid-standard: overlay the R3 delta (deployments/, docs/sepolia-worked-example.md, scripts/sepolia-replay.js, README, ERCS/erc-aid.md, ercs-pr-package/ERCS/erc-8434.md, docs/magicians-replies-2026-10-16.md, this checklist, PR-COMMENT-r3.md). `node scripts/sepolia-replay.js` must print "matches" for A and B.
+- [ ] After CI is green: post the thread-level reply from docs/magicians-replies-2026-10-16.md.

@@ -1,0 +1,176 @@
+{
+  "network": "sepolia",
+  "chainId": 11155111,
+  "deployedAt": "2026-10-15",
+  "contracts": {
+    "AIDRegistry": {
+      "address": "0x01C05738eebD20DC80bBb9Fa1Ceb1165af8dA00F",
+      "deployer": "0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+      "creationTx": "0x32666980aba1913c8e98d5e36080df40e53a4edd9218122af58febbd63ecc7ef",
+      "block": 11921818,
+      "compiler": "solc 0.8.28+commit.7893614a (solc-js), optimizer 200 runs, evmVersion cancun",
+      "constructorArgs": {
+        "defaultLivenessWindow": 7776000,
+        "maxLivenessWindow": 31536000
+      },
+      "sourcify": {
+        "match": "exact_match",
+        "runtimeMatch": "exact_match",
+        "creationMatch": "exact_match",
+        "verifiedAt": "2026-10-15T17:28:13Z",
+        "url": "https://repo.sourcify.dev/11155111/0x01C05738eebD20DC80bBb9Fa1Ceb1165af8dA00F"
+      }
+    }
+  },
+  "erc8004IdentityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+  "workedExample": {
+    "agentId": 11039,
+    "anchorA": "0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+    "anchorB": "0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+    "finalState": {
+      "0x7B21E11Cd89826cB76784d6f780514432f34dAAD": "RETIRED (successor B)",
+      "0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2": "ACTIVE"
+    },
+    "authorityIntervals": {
+      "0x7B21E11Cd89826cB76784d6f780514432f34dAAD": [
+        {
+          "from": 1792084272,
+          "until": 1792084392
+        }
+      ],
+      "0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2": [
+        {
+          "from": 1792084476,
+          "until": null
+        }
+      ]
+    },
+    "pinnedBlock": 11921903,
+    "pinnedBlockTimestamp": 1792085136,
+    "transactions": [
+      {
+        "step": "deploy",
+        "description": "AIDRegistry(defaultLivenessWindow=7776000, maxLivenessWindow=31536000) deployed by A",
+        "from": "0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+        "hash": "0x32666980aba1913c8e98d5e36080df40e53a4edd9218122af58febbd63ecc7ef",
+        "block": 11921818,
+        "timestamp": 1792084116,
+        "gasUsed": 13394818
+      },
+      {
+        "step": "register",
+        "description": "A registers agent 11039 on the official ERC-8004 Identity Registry with a data: registration file (agentWallet defaults to A)",
+        "from": "0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+        "hash": "0x1a5717f720cbc1210451aa91351733b4a84962dbe877e73722402cd13de7a6e6",
+        "block": 11921822,
+        "timestamp": 1792084164,
+        "gasUsed": 1927743
+      },
+      {
+        "step": "bindA",
+        "description": "A.bind(IdentityRegistry, 11039): A is ACTIVE",
+        "from": "0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+        "hash": "0x61df7a7a032fcb3e0759bfff03f28bdb8436bc7dab9a8c475a3e776a22ba9e7e",
+        "block": 11921831,
+        "timestamp": 1792084272,
+        "gasUsed": 584988
+      },
+      {
+        "step": "facetA",
+        "description": "A.setFacet(aid:core/identity/v1, keccak(JCS(registration file)), validFrom=t0, validUntil=t0+1y, PUBLIC)",
+        "from": "0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+        "hash": "0xc066e1e180992215f6c14fcc99b0c4c01ade793a5113c69516c4e7e570066059",
+        "block": 11921831,
+        "timestamp": 1792084272,
+        "gasUsed": 2130621
+      },
+      {
+        "step": "docA",
+        "description": "A.setDocumentURI(data: AID Document, keccak(JCS(document)))",
+        "from": "0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+        "hash": "0xf586ef91f42a4c31616b30572d17dd078a8f4540ccda72839bf54dac40a29175",
+        "block": 11921837,
+        "timestamp": 1792084344,
+        "gasUsed": 3913955
+      },
+      {
+        "step": "heartbeatA",
+        "description": "A.heartbeat()",
+        "from": "0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+        "hash": "0x103b7709f7284c39ada324aed2de144973070bc5c8c77aab4d2493c537559585",
+        "block": 11921837,
+        "timestamp": 1792084344,
+        "gasUsed": 21274
+      },
+      {
+        "step": "fundB",
+        "description": "A funds B (0.004 ETH)",
+        "from": "0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+        "hash": "0x49cf4eab8959f912f2872822a5518a3dac1fa50a78ff11497d712d4d67971142",
+        "block": 11921837,
+        "timestamp": 1792084344,
+        "gasUsed": 204600
+      },
+      {
+        "step": "transfer",
+        "description": "A transfers agent 11039 to B on ERC-8004 (MetadataSet clears agentWallet, Transfer): A is STALE with no AID transaction",
+        "from": "0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+        "hash": "0x3e02738efd152d233616afa47511982ad3b0f506acfb40913aa18f40ad1d3f69",
+        "block": 11921841,
+        "timestamp": 1792084392,
+        "gasUsed": 153892
+      },
+      {
+        "step": "bindB",
+        "description": "B.bind(IdentityRegistry, 11039): takeover of the stale binding, emits Unbound(A) then Bound(B); A is DORMANT, B is ACTIVE",
+        "from": "0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+        "hash": "0x5ae682bc83fd08c199afca4ccd474898b553f98b63ab5b065dcc5f506909cd45",
+        "block": 11921848,
+        "timestamp": 1792084476,
+        "gasUsed": 496540
+      },
+      {
+        "step": "heartbeatB",
+        "description": "B.heartbeat()",
+        "from": "0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+        "hash": "0xb4a342a5c12e4d779c4d0a6b8e8c3fd3237bc69dbc5b90a4b8137cc9d2e73dd8",
+        "block": 11921849,
+        "timestamp": 1792084488,
+        "gasUsed": 31274
+      },
+      {
+        "step": "docB",
+        "description": "B.setDocumentURI(data: AID Document) (first version; replaced by docB2)",
+        "from": "0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+        "hash": "0x63f3619d38c51ff69f27b5fd855548202e2c9e2300d85a498b5f9a3bd50af747",
+        "block": 11921850,
+        "timestamp": 1792084500,
+        "gasUsed": 3913955
+      },
+      {
+        "step": "retireA",
+        "description": "A.retire(B): A is RETIRED with successor B",
+        "from": "0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+        "hash": "0x76fbfd7d4c8fd6f248df152451ee5f456aba848e28881633c8b320994a272bdc",
+        "block": 11921851,
+        "timestamp": 1792084512,
+        "gasUsed": 252469
+      },
+      {
+        "step": "docB2",
+        "description": "B.setDocumentURI(data: AID Document, keccak(JCS(document))) with the identity facet observed at B's boundAt (the live document)",
+        "from": "0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+        "hash": "0x5f16bf9180afe5244b8c30c912510835b401ce6a1cd9b8629e9578293b99e3be",
+        "block": 11921903,
+        "timestamp": 1792085136,
+        "gasUsed": 186893
+      }
+    ]
+  },
+  "notes": [
+    "Keys of both anchors were generated for this session only and are not kept; B stops heartbeating, so B becomes STALE 90 days after block 11921903 by design.",
+    "Gas used is several times the local Hardhat figures: Sepolia runs the next-fork gas schedule; limits were taken from live eth_estimateGas.",
+    "Sepolia emits ETH-transfer logs from 0xff...fe (fundB has one log); the resolver filters ERC-8004 Transfer events by registry address, so they do not interfere.",
+    "rpc-replay.json holds every JSON-RPC response the reference resolver requested, pinned to block 11921903, so scripts/sepolia-replay.js reproduces resolved-*.json offline."
+  ]
+}

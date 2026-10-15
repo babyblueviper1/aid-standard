@@ -1,0 +1,143 @@
+{
+  "snapshot": {
+    "aid": "eip155:11155111:0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+    "state": 1,
+    "binding": {
+      "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+      "agentId": 11039,
+      "boundAt": 1792084476
+    },
+    "lastSeen": 1792085136,
+    "livenessWindow": 7776000,
+    "successor": null,
+    "documentDigest": "0xb1ecff488ae713a4a38d8c23959a9db7d8fd2d58a65b446f1c333bf4c204bc91",
+    "document": {
+      "aid": "eip155:11155111:0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+      "binding": {
+        "agentId": 11039,
+        "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e"
+      },
+      "did": "did:aid:eip155:11155111:0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+      "facets": [
+        {
+          "access": {
+            "mode": "PUBLIC"
+          },
+          "digest": "0x1664b7e01137a0a2d9a47014cba5c546c27dd1fbe19af3b59cd492d5cb01a7d1",
+          "facetType": "aid:core/identity/v1",
+          "issuer": "eip155:11155111:0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+          "observedAt": 1792084476,
+          "provenance": "SELF",
+          "resolver": {
+            "agentId": 11039,
+            "chainId": 11155111,
+            "kind": "erc8004-identity",
+            "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e"
+          },
+          "validFrom": 1792084476,
+          "validUntil": 1823620476
+        }
+      ],
+      "livenessWindow": 7776000,
+      "updatedAt": 1792084476,
+      "version": "aid-document/v1"
+    },
+    "onChainFacets": {},
+    "registrationFile": {
+      "active": true,
+      "description": "Demo agent for the ERC-8434 (AID) reference deployment on Sepolia. Anchored by its owner/agentWallet address through AIDRegistry.",
+      "image": "",
+      "name": "erc-8434-worked-example",
+      "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1"
+    },
+    "authorityIntervals": [
+      {
+        "from": 1792084476,
+        "until": null,
+        "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+        "agentId": 11039
+      }
+    ]
+  },
+  "resolved": {
+    "onChainState": "ACTIVE",
+    "resolvedState": "ACTIVE",
+    "reasons": [],
+    "binding": {
+      "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+      "agentId": 11039,
+      "boundAt": 1792084476
+    },
+    "lastSeen": 1792085136,
+    "livenessWindow": 7776000,
+    "authorityIntervals": [
+      {
+        "from": 1792084476,
+        "until": null,
+        "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+        "agentId": 11039
+      }
+    ],
+    "document": {
+      "aid": "eip155:11155111:0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+      "binding": {
+        "agentId": 11039,
+        "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e"
+      },
+      "did": "did:aid:eip155:11155111:0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+      "facets": [
+        {
+          "access": {
+            "mode": "PUBLIC"
+          },
+          "digest": "0x1664b7e01137a0a2d9a47014cba5c546c27dd1fbe19af3b59cd492d5cb01a7d1",
+          "facetType": "aid:core/identity/v1",
+          "issuer": "eip155:11155111:0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+          "observedAt": 1792084476,
+          "provenance": "SELF",
+          "resolver": {
+            "agentId": 11039,
+            "chainId": 11155111,
+            "kind": "erc8004-identity",
+            "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e"
+          },
+          "validFrom": 1792084476,
+          "validUntil": 1823620476
+        }
+      ],
+      "livenessWindow": 7776000,
+      "updatedAt": 1792084476,
+      "version": "aid-document/v1"
+    },
+    "alsoKnownAs": [],
+    "facets": {
+      "current": [
+        {
+          "access": {
+            "mode": "PUBLIC"
+          },
+          "digest": "0x1664b7e01137a0a2d9a47014cba5c546c27dd1fbe19af3b59cd492d5cb01a7d1",
+          "facetType": "aid:core/identity/v1",
+          "issuer": "eip155:11155111:0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+          "observedAt": 1792084476,
+          "provenance": "SELF",
+          "resolver": {
+            "agentId": 11039,
+            "chainId": 11155111,
+            "kind": "erc8004-identity",
+            "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e"
+          },
+          "validFrom": 1792084476,
+          "validUntil": 1823620476,
+          "verified": false,
+          "finality": "final",
+          "attribution": "in-interval",
+          "timing": "none"
+        }
+      ],
+      "history": [],
+      "invalid": [],
+      "unattributable": []
+    }
+  }
+}
