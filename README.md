@@ -29,9 +29,11 @@ scripts/vectors.js · fixtures.js      regenerate vectors and fixtures
 test/run.js                           behavioural tests on a local Hardhat chain (33 cases)
 docs/magicians-replies-*.md           posted replies + decisions per review round
 docs/sepolia-worked-example.md        Sepolia reference deployment: timeline, what the resolver reports and why
+docs/did-aid-method.md                did:aid DID method (companion spec, draft 0.1): DID syntax, DID URL paths, resolution, DID Document mapping
 deployments/sepolia.json              addresses, constructor args, Sourcify match, every transaction of the worked example
 deployments/sepolia/                  recorded JSON-RPC responses (pinned block), resolver outputs, decoded AID Documents
-scripts/sepolia-replay.js             re-runs the reference resolver offline against the recorded responses (or live with --live)
+scripts/sepolia-replay.js             re-runs the reference resolver offline against the recorded responses (or live with --live; --manifest <bundle> for contributed bundles)
+examples/                             contributed recorded cases (data only): a manifest of the deployments/sepolia.json shape, rpc-replay.json, resolved-*.json, README
 tools/aid-resolve/verifiers/ots.js    optional OpenTimestamps verifier plug-in (contributed; not part of the ERC assets)
 ```
 
@@ -68,7 +70,7 @@ Details in [docs/sepolia-worked-example.md](docs/sepolia-worked-example.md).
 
 ## Design summary
 
-- **Anchor** = `(eip155, chainId, address)`; CAIP-10 string `eip155:{chainId}:{address}`; DID form `did:aid:eip155:{chainId}:{address}` (companion DID method).
+- **Anchor** = `(eip155, chainId, address)`; CAIP-10 string `eip155:{chainId}:{address}`; DID form `did:aid:eip155:{chainId}:{address}` (companion DID method: [docs/did-aid-method.md](docs/did-aid-method.md)).
 - **Binding** to ERC-8004 is strictly one-to-one (anchor ↔ `(identityRegistry, agentId)`), anchor-authorised (direct or EIP-712 `bindWithSig`, EIP-1271 for smart accounts), requiring `agentWallet == anchor` or `ownerOf == anchor`. Recommended anchor: the agent wallet.
 - **States**: `DORMANT → ACTIVE ⇄ STALE`, `→ RETIRED` (irreversible, releases the binding, optional successor). On-chain `state()` is fully deterministic; resolvers downgrade with the 8004 registration file's `active` flag.
 - **Authority intervals**: a binding confers authority only while its predicate holds; re-establishing it opens a new interval and never authorizes the gap. `agentId`-keyed evidence observed in a gap is not attributable; intervals are reconstructed from `Bound`/`Unbound` + ERC-8004 `Transfer` / `MetadataSet(agentWallet)`. A binding whose predicate has failed can be taken over by the agent's current owner/wallet.
@@ -82,7 +84,7 @@ Details in [docs/sepolia-worked-example.md](docs/sepolia-worked-example.md).
 ## Process rules
 
 - ERCs PR branch: `add-erc-aid`, cut from `ethereum/ERCs` **upstream** master. Never from the fork's master (reserved for PR #1879 / ERC-8338).
-- Rounds: R1 memo + skeleton (done) → R2 full text + contracts + schemas + vectors + resolver (done) → R3 Sepolia deployment + worked example (done 2026-10-15) → R4 ERCs PR (filed as #2044) + DID method companion.
+- Rounds: R1 memo + skeleton (done) → R2 full text + contracts + schemas + vectors + resolver (done) → R3 Sepolia deployment + worked example (done 2026-10-15) → R4 ERCs PR (filed as #2044) + DID method companion (draft 0.1 in docs/).
 - Two texts, one design: `ERCS/erc-aid.md` (source; cites ERC-8419/8338/8414 by number, `requires: 8419`) and `ercs-pr-package/ERCS/erc-8434.md` (filing variant; self-contained, no references to still-unmerged proposals, so ethereum/ERCs CI can pass now). The filing variant is generated, never hand-edited. Numbered references are restored by a follow-up PR once #2012 / #1879 / #2005 merge.
 
 ## Related

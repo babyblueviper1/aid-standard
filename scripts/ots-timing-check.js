@@ -1,13 +1,18 @@
 // Runs assets/erc-aid/vectors/fixtures/ots-timing.json through the reference resolver with the OpenTimestamps verifier plugged in,
-// then mutates the proof and checks every mutation is refused (timing falls back to integrity-only). No network.   node scripts/ots-timing-check.js
+// then mutates the proof and checks every mutation is refused (timing falls back to integrity-only). No network.
+//   node scripts/ots-timing-check.js                  # the fixture under assets/
+//   node scripts/ots-timing-check.js <fixture.json>   # another snapshot of the same shape (document, documentDigest, expect{facetType: {timing, timingReason?}},
+//                                                     # optional now, optional mutate: facetType to mutate; default = the first facet with an ots proof)
 const fs = require("fs");
 const path = require("path");
 const { resolveSnapshot } = require("../tools/aid-resolve/resolve");
 const { verifyOts } = require("../tools/aid-resolve/verifiers/ots");
 const { canonicalize } = require("../tools/jcs");
 const { ethers } = require("ethers");
-const fx = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assets", "erc-aid", "vectors", "fixtures", "ots-timing.json")));
-const NOW = 1790870000;
+const FX = process.argv[2] ? path.resolve(process.argv[2]) : path.join(__dirname, "..", "assets", "erc-aid", "vectors", "fixtures", "ots-timing.json");
+const fx = JSON.parse(fs.readFileSync(FX));
+const NOW = Number.isFinite(fx.now) ? fx.now : 1790870000;
+const MUT = fx.mutate || (fx.document.facets.find((x) => x.committedAt && x.committedAt.anchor === "ots" && x.committedAt.proof && x.committedAt.proof.ots) || {}).facetType || "aid:tasks/erc8414/v1";
 let fail = 0;
 const chk = (name, ok, extra = "") => { console.log((ok ? "PASS " : "FAIL ") + name + (ok ? "" : "  " + extra)); if (!ok) fail++; };
 (async () => {
@@ -20,9 +25,9 @@ const chk = (name, ok, extra = "") => { console.log((ok ? "PASS " : "FAIL ") + n
   }
   // mutations of the proof carried by facet A must never verify
   const mut = async (label, edit) => {
-    const s = JSON.parse(JSON.stringify(fx)); const f = s.document.facets.find((x) => x.facetType === "aid:tasks/erc8414/v1"); edit(f.committedAt.proof);
+    const s = JSON.parse(JSON.stringify(fx)); const f = s.document.facets.find((x) => x.facetType === MUT); edit(f.committedAt.proof);
     s.documentDigest = ethers.keccak256(ethers.toUtf8Bytes(canonicalize(s.document)));   // re-hash so ONLY the proof differs, the document still resolves
-    const r = (await run(s))["aid:tasks/erc8414/v1"] || {};
+    const r = (await run(s))[MUT] || {};
     chk(`refused: ${label}`, r.timing === "integrity-only" && r.committedAtVerified === undefined, JSON.stringify(r.timing));
   };
   const flip = (hex, i) => hex.slice(0, i) + ((parseInt(hex[i], 16) ^ 1).toString(16)) + hex.slice(i + 1);
