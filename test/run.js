@@ -340,6 +340,22 @@ async function main() {
     eq(r2.alsoKnownAs[2].status, "confirmed");
   });
 
+  await t("digestAlg: content digest defaults to keccak256, sha256 admitted; schema accepts the member and rejects other values", async () => {
+    const { contentDigest, verifyContent } = require("../tools/aid-resolve/resolve");
+    const { canonicalize } = require("../tools/jcs");
+    const content = { question: "demo", verdict: "yes", issuedAt: 1 };
+    const bytes = ethers.toUtf8Bytes(canonicalize(content));
+    eq(contentDigest(content), ethers.keccak256(bytes)); eq(contentDigest(content, "sha256"), ethers.sha256(bytes));
+    const base = { facetType: "aid:behavior/demo/v1", provenance: "ATTESTED", issuer: "eip155:1:0x0000000000000000000000000000000000000001", validUntil: 2, access: { mode: "PUBLIC" }, resolver: { kind: "uri" } };
+    eq(verifyContent({ ...base, digest: ethers.keccak256(bytes) }, content), true);
+    eq(verifyContent({ ...base, digest: ethers.sha256(bytes), digestAlg: "sha256" }, content), true);
+    eq(verifyContent({ ...base, digest: ethers.sha256(bytes) }, content), false);
+    eq(verifyContent({ ...base, digest: ethers.keccak256(bytes), access: { mode: "ZK" } }, content), false);
+    const Ajv = require("ajv/dist/2020"); const validate = new Ajv({ strict: false }).compile(JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assets", "erc-aid", "schemas", "facet.schema.json"))));
+    eq(validate({ ...base, digest: ethers.sha256(bytes), digestAlg: "sha256" }), true); eq(validate({ ...base, digest: ethers.keccak256(bytes) }), true);
+    eq(validate({ ...base, digest: ethers.keccak256(bytes), digestAlg: "blake3" }), false);
+  });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed) process.exit(1);
 }

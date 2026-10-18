@@ -28,8 +28,9 @@ Both anchor keys were generated for the deployment session only and are not kept
 | 8 | 11921849–50 | B | `heartbeat()`, `setDocumentURI(…)` | — |
 | 9 | 11921851 | A | `retire(B)` | A is `RETIRED`, successor B |
 | 10 | 11921903 | B | `setDocumentURI(…)` again, identity facet now observed at B's `boundAt` | the live Document |
+| 11 | 11944210 | B | `setDocumentURI(…)` a third time: the Document now also lists two `ATTESTED` facets from a third-party issuer (`0x4AA3…4991`), each with an `ots` commitment and an entry in the issuer's on-chain-declared commitment log; the second supersedes the first after `subjectWindow.until` (42.8 M gas for the 13.3 KB `data:` URI) | the live Document; the recorded resolver run for this case is the issuer's contribution under `examples/` |
 
-The registration file and both AID Documents are `data:application/json;base64` URIs, so the example is self-contained on chain; the decoded files are in `deployments/sepolia/`.
+The registration file and all AID Documents are `data:application/json;base64` URIs, so the example is self-contained on chain; the decoded files are in `deployments/sepolia/` (`aid-document-B.json` is the current Document, `aid-document-B.v2.json` the one the block-11921903 replay below resolved).
 
 ## What the reference resolver reports
 
@@ -38,6 +39,10 @@ The registration file and both AID Documents are `data:application/json;base64` 
 **Anchor B** — `onChainState: ACTIVE`, `resolvedState: ACTIVE` (registration file `active: true`), binding `(0x8004…BD9e, 11039)` bound at 1792084476, one open authority interval `[1792084476, ∞)` reconstructed from `Bound(B)` and the ERC-8004 `Transfer`/`MetadataSet(agentWallet)` history. Its `aid:core/identity/v1` facet is current, `attribution: in-interval`, `provenance: SELF` and therefore never `verified`, `timing: none` (no `committedAt`).
 
 **Anchor A** — `onChainState: RETIRED`, successor B; one closed authority interval `[1792084272, 1792084392)`: it opens at `Bound(A)` and closes at the transfer, not at the later `Unbound(A)`, because the predicate failed first (§3, authority intervals). A's identity facet is reported **not attributable**: its `observedAt` is the registration time (1792084164), which is before A's interval began. That is the rule working as specified — evidence keyed by `agentId` counts only inside an authority interval — and it is why B's Document was re-published with `observedAt = boundAt` in step 10.
+
+## Third-party commitment log (step 11)
+
+The two facets added in step 11 are not the reference anchor's own claims: a third-party issuer anchored them in its own OpenTimestamps-witnessed commitment log, declared `commitmentLog` in its AID Document on this registry (block 11937503), and the reference anchor listed the envelopes so that the resolver can classify them. Their content digests are `sha256` of the JCS-canonical content, which is why the envelopes carry `digestAlg: "sha256"` (ERC §5, added in R2.9 after this case surfaced the unstated default). Resolving B after block 11944210 reports the first facet as history with `supersessionTiming: not-before-outcome` and `reversedAfterOutcome: true`, and the second as current with `timing: integrity-only` (committed after `subjectWindow.until`). The issuer's recorded bundle (RPC responses, resolver output, `ots-timing-check` result) lives under `examples/` as a contribution and is reproduced with `node scripts/sepolia-replay.js --manifest examples/<bundle>/manifest.json`.
 
 ## Operational notes
 

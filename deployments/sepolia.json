@@ -164,13 +164,50 @@
         "block": 11921903,
         "timestamp": 1792085136,
         "gasUsed": 186893
+      },
+      {
+        "step": "fundB2",
+        "description": "A funds B again (0.015 ETH) for the third Document",
+        "from": "0x7B21E11Cd89826cB76784d6f780514432f34dAAD",
+        "hash": "0x765c9493f91b7c2a6f953a7c1195fb36ac3bea47b208ed5fed8d3acff78d8e67",
+        "block": 11944111,
+        "timestamp": 1792363440,
+        "gasUsed": 21000
+      },
+      {
+        "step": "docB3",
+        "description": "B.setDocumentURI(data: AID Document, keccak(JCS(document))): the Document now also lists the two ATTESTED facets of the third-party issuer 0x4AA351E5f00eBe168E5C6f823f2940553d164991 (facetType aid:behavior/verification-verdict/v1, digestAlg sha256, committedAt ots with an issuer-declared commitment log; the second supersedes the first after subjectWindow.until)",
+        "from": "0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+        "hash": "0x9ef33beab91cb7d124554fb9846b55a28284e16d9930ae88340defc8dd17eb85",
+        "block": 11944210,
+        "timestamp": 1792364628,
+        "gasUsed": 42785006
+      },
+      {
+        "step": "heartbeatB2",
+        "description": "B.heartbeat()",
+        "from": "0xd6b24DF77E6f5e7BEFf51460a1d60C2fb7ac9eb2",
+        "hash": "0x4ac6259fc1d3fe79c7d4fc16f50a4f978d22314a2a684a93b7ef47be11ba5fe4",
+        "block": 11944211,
+        "timestamp": 1792364640,
+        "gasUsed": 31274
       }
-    ]
+    ],
+    "thirdPartyIssuer": {
+      "anchor": "0x4AA351E5f00eBe168E5C6f823f2940553d164991",
+      "aidDocumentSetAt": {
+        "tx": "0xe0fea729 (see the issuer's thread post)",
+        "block": 11937503
+      },
+      "commitmentLogDeclaredAt": 1792282956,
+      "note": "Issuer-side data (log, head proofs, facet contents) is hosted by the issuer and referenced by URI from B's Document; the recorded replay of this case is the issuer's contribution under examples/."
+    }
   },
   "notes": [
     "Keys of both anchors were generated for this session only and are not kept; B stops heartbeating, so B becomes STALE 90 days after block 11921903 by design.",
     "Gas used is several times the local Hardhat figures: Sepolia runs the next-fork gas schedule; limits were taken from live eth_estimateGas.",
     "Sepolia emits ETH-transfer logs from 0xff...fe (fundB has one log); the resolver filters ERC-8004 Transfer events by registry address, so they do not interfere.",
-    "rpc-replay.json holds every JSON-RPC response the reference resolver requested, pinned to block 11921903, so scripts/sepolia-replay.js reproduces resolved-*.json offline."
+    "rpc-replay.json holds every JSON-RPC response the reference resolver requested, pinned to block 11921903, so scripts/sepolia-replay.js reproduces resolved-*.json offline.",
+    "Block 11944210: B's Document was re-published with two third-party ATTESTED facets (sha256 content digests, declared with digestAlg). The 13.3 KB data: URI cost 42.8 M gas. The Document's updatedAt (1792400000) is a self-declared round number slightly ahead of the publishing block; it is not checked by any rule."
   ]
 }

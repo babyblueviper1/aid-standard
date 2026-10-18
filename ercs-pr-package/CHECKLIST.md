@@ -88,3 +88,9 @@ Commit message: `Add ERC: Agent Identity (AID)`.
 - [ ] On branch `add-erc-aid` (PR #2044): replace `ERCS/erc-8434.md` only (one informative sentence in Reference Implementation). Commit: `ERC-8434: Sepolia reference deployment (informative)`. Paste PR-COMMENT-r3.md as a comment; do not upload it. Do not click "Update branch".
 - [ ] aid-standard: overlay the R3 delta (deployments/, docs/sepolia-worked-example.md, scripts/sepolia-replay.js, README, ERCS/erc-aid.md, ercs-pr-package/ERCS/erc-8434.md, docs/magicians-replies-2026-10-16.md, this checklist, PR-COMMENT-r3.md). `node scripts/sepolia-replay.js` must print "matches" for A and B.
 - [ ] After CI is green: post the thread-level reply from docs/magicians-replies-2026-10-16.md.
+
+## 11. R2.9: `digestAlg` (2026-10-19)
+
+- [ ] On branch `add-erc-aid` (PR #2044): replace `ERCS/erc-8434.md`, `assets/erc-8434/schemas/facet.schema.json`, `assets/erc-8434/tools/aid-resolve/resolve.js`. Commit: `ERC-8434: digestAlg on the facet envelope (content hash made explicit)`. Paste PR-COMMENT-r2.9.md as a comment; do not upload it. Do not click "Update branch".
+- [ ] aid-standard: overlay the R2.9 delta (ERC source + filing variant, schema, resolver, test, deployments record and `aid-document-B.json`/`.v2.json`, docs/sepolia-worked-example.md, docs/magicians-replies-2026-10-19.md, this checklist, PR-COMMENT-r2.9.md).
+- [ ] Post the reply to #27 from docs/magicians-replies-2026-10-19.md after the PR commit is green.
